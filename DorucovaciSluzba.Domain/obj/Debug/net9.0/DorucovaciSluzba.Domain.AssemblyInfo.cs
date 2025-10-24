@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DorucovaciSluzba.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+359de324526be654844f97fc097d10e4043eff0a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a0867a64fd99edebddab92ebd3895f13e85ae65")]
 [assembly: System.Reflection.AssemblyProductAttribute("DorucovaciSluzba.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DorucovaciSluzba.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
