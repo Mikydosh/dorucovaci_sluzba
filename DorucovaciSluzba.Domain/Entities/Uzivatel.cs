@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DorucovaciSluzba.Domain.Entities
 {
+    [Table(nameof(Uzivatel))]
     public class Uzivatel : Entity<int>
     {
         [Required]

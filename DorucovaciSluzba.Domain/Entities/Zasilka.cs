@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DorucovaciSluzba.Domain.Entities
 {
+    [Table(nameof(Zasilka))]
     public class Zasilka : Entity<int>
     {
         public string Cislo { get; set; } = string.Empty;

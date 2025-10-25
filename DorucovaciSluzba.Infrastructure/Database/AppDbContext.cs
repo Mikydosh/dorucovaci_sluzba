@@ -18,5 +18,28 @@ namespace DorucovaciSluzba.Infrastructure.Database
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Zasilka>()
+                .HasOne(z => z.Odesilatel)
+                .WithMany(u => u.OdeslaneZasilky)
+                .HasForeignKey(z => z.OdesilatelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Zasilka>()
+                .HasOne(z => z.Prijemce)
+                .WithMany(u => u.PrijateZasilky)
+                .HasForeignKey(z => z.PrijemceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Zasilka>()
+                .HasOne(z => z.Kuryr)
+                .WithMany()
+                .HasForeignKey(z => z.KuryrId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

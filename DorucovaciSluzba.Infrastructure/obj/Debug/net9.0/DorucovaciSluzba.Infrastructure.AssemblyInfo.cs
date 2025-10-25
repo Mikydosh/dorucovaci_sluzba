@@ -11,13 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("DorucovaciSluzba.Infrastructure")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a0867a64fd99edebddab92ebd3895f13e85ae65")]
-[assembly: System.Reflection.AssemblyProductAttribute("DorucovaciSluzba.Infrastructure")]
-[assembly: System.Reflection.AssemblyTitleAttribute("DorucovaciSluzba.Infrastructure")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+//[assembly: System.Reflection.AssemblyCompanyAttribute("DorucovaciSluzba.Infrastructure")]
+//[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+//[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+//[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc605b46f9b2366efb0643b2c338f0e42f2bc27b")]
+//[assembly: System.Reflection.AssemblyProductAttribute("DorucovaciSluzba.Infrastructure")]
+//[assembly: System.Reflection.AssemblyTitleAttribute("DorucovaciSluzba.Infrastructure")]
+//[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Vygenerované třídou WriteCodeFragment nástroje MSBuild
 

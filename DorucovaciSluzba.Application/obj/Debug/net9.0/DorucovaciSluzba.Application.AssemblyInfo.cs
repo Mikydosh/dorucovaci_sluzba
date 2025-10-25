@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DorucovaciSluzba.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a0867a64fd99edebddab92ebd3895f13e85ae65")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc605b46f9b2366efb0643b2c338f0e42f2bc27b")]
 [assembly: System.Reflection.AssemblyProductAttribute("DorucovaciSluzba.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DorucovaciSluzba.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
