@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98CA6E91-15A3-40D7-B7FB-B9F523CE9114}|DorucovaciSluzba.csproj|c:\\users\\tereza\\documents\\dorucovacisluzba\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{98CA6E91-15A3-40D7-B7FB-B9F523CE9114}|DorucovaciSluzba.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98CA6E91-15A3-40D7-B7FB-B9F523CE9114}|DorucovaciSluzba.csproj|c:\\users\\tereza\\documents\\dorucovacisluzba\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98CA6E91-15A3-40D7-B7FB-B9F523CE9114}|DorucovaciSluzba.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D47EE466-36CC-4DE8-8EE3-33EC9B1F6CF4}|DorucovaciSluzba.Infrastructure\\DorucovaciSluzba.Infrastructure.csproj|c:\\users\\tereza\\documents\\dorucovacisluzba\\dorucovacisluzba.infrastructure\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D47EE466-36CC-4DE8-8EE3-33EC9B1F6CF4}|DorucovaciSluzba.Infrastructure\\DorucovaciSluzba.Infrastructure.csproj|solutionrelative:dorucovacisluzba.infrastructure\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -39,19 +47,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-26T09:20:47.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T15:02:58.19Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Infrastructure\\Database\\AppDbContext.cs",
               "RelativeDocumentMoniker": "DorucovaciSluzba.Infrastructure\\Database\\AppDbContext.cs",
               "ToolTip": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Infrastructure\\Database\\AppDbContext.cs",
               "RelativeToolTip": "DorucovaciSluzba.Infrastructure\\Database\\AppDbContext.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAAwCoAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAswCoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-25T14:34:25.038Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "StavZasilka.cs",
               "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\Entities\\StavZasilka.cs",
               "RelativeDocumentMoniker": "DorucovaciSluzba.Domain\\Entities\\StavZasilka.cs",
@@ -59,12 +93,11 @@
               "RelativeToolTip": "DorucovaciSluzba.Domain\\Entities\\StavZasilka.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T10:24:16.821Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-24T10:24:16.821Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Zasilka.cs",
               "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\Entities\\Zasilka.cs",
               "RelativeDocumentMoniker": "DorucovaciSluzba.Domain\\Entities\\Zasilka.cs",
@@ -72,12 +105,11 @@
               "RelativeToolTip": "DorucovaciSluzba.Domain\\Entities\\Zasilka.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T09:23:54.918Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-24T09:23:54.918Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Uzivatel.cs",
               "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\Entities\\Uzivatel.cs",
               "RelativeDocumentMoniker": "DorucovaciSluzba.Domain\\Entities\\Uzivatel.cs",
@@ -85,12 +117,11 @@
               "RelativeToolTip": "DorucovaciSluzba.Domain\\Entities\\Uzivatel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T09:22:26.889Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-24T09:22:26.889Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "TypUzivatel.cs",
               "DocumentMoniker": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\Entities\\TypUzivatel.cs",
               "RelativeDocumentMoniker": "DorucovaciSluzba.Domain\\Entities\\TypUzivatel.cs",
@@ -98,8 +129,7 @@
               "RelativeToolTip": "DorucovaciSluzba.Domain\\Entities\\TypUzivatel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T10:20:35.523Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-24T10:20:35.523Z"
             }
           ]
         }
