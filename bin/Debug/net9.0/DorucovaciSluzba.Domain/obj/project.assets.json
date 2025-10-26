@@ -8,23 +8,23 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Tereza\\.nuget\\packages\\": {},
+    "C:\\Users\\Mikyd\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\DorucovaciSluzba.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\Mikyd\\Source\\Repos\\dorucovaci_sluzba\\DorucovaciSluzba.Domain\\DorucovaciSluzba.Domain.csproj",
       "projectName": "DorucovaciSluzba.Domain",
-      "projectPath": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\DorucovaciSluzba.Domain.csproj",
-      "packagesPath": "C:\\Users\\Tereza\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tereza\\Documents\\DorucovaciSluzba\\DorucovaciSluzba.Domain\\obj\\",
+      "projectPath": "C:\\Users\\Mikyd\\Source\\Repos\\dorucovaci_sluzba\\DorucovaciSluzba.Domain\\DorucovaciSluzba.Domain.csproj",
+      "packagesPath": "C:\\Users\\Mikyd\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Mikyd\\Source\\Repos\\dorucovaci_sluzba\\DorucovaciSluzba.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Tereza\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Mikyd\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
