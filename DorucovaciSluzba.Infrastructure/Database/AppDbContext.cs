@@ -1,4 +1,5 @@
 ﻿using DorucovaciSluzba.Domain.Entities;
+using DorucovaciSluzba.Infrastructure.Database.Seeding;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,12 @@ namespace DorucovaciSluzba.Infrastructure.Database
                 .WithMany()
                 .HasForeignKey(z => z.KuryrId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            var userTypeInit = new UserTypeInit();
+            modelBuilder.Entity<TypUzivatel>().HasData(userTypeInit.GetUserTypes());
+
+            var userInit = new UserInit();
+            modelBuilder.Entity<Uzivatel>().HasData(userInit.GetUsers());
         }
     }
 }
