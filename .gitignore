@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+DorucovaciSluzba.Application/bin
+DorucovaciSluzba.Application/obj
+DorucovaciSluzba.Application/DorucovaciSluzba.Application.csproj
+DorucovaciSluzba.Domain/bin
+DorucovaciSluzba.Domain/obj
+DorucovaciSluzba.Domain/DorucovaciSluzba.Domain.csproj
+DorucovaciSluzba.Infrastructure/bin
+DorucovaciSluzba.Infrastructure/obj
+DorucovaciSluzba.Infrastructure/DorucovaciSluzba.Infrastructure.csproj
+
 # User-specific files
 *.rsuser
 *.suo
