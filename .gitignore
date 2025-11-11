@@ -5,10 +5,13 @@
 
 DorucovaciSluzba.Application/bin
 DorucovaciSluzba.Application/obj
+
 DorucovaciSluzba.Domain/bin
 DorucovaciSluzba.Domain/obj
+
 DorucovaciSluzba.Infrastructure/bin
 DorucovaciSluzba.Infrastructure/obj
+
 
 # User-specific files
 *.rsuser
