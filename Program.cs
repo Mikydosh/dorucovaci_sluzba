@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DorucovaciSluzba.Infrastructure.Database;
+using DorucovaciSluzba.Application.Abstraction;
+using DorucovaciSluzba.Application.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ builder.Services.AddControllersWithViews();
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
 ServerVersion serverVersion = new MySqlServerVersion("8.0.43");
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder => optionsBuilder.UseMySql(connectionString, serverVersion));
+
+builder.Services.AddScoped<IPackageAppService, PackageAppService>();
 
 var app = builder.Build();
 

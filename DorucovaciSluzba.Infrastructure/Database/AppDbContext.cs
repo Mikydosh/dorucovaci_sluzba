@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DorucovaciSluzba.Infrastructure.Database
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<Zasilka> Zasilky { get; set; }
         public DbSet<Uzivatel> Uzivatele { get; set; }
