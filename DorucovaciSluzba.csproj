@@ -4,7 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,10 @@
     <ProjectReference Include="DorucovaciSluzba.Application\DorucovaciSluzba.Application.csproj" />
     <ProjectReference Include="DorucovaciSluzba.Domain\DorucovaciSluzba.Domain.csproj" />
     <ProjectReference Include="DorucovaciSluzba.Infrastructure\DorucovaciSluzba.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DorucovaciSluzba.Application\" />
   </ItemGroup>
 
 </Project>
