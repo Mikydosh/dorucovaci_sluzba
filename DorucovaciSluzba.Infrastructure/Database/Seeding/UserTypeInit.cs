@@ -16,25 +16,25 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
             types.Add(new TypUzivatel()
             {
                 Id = 1,
-                Typ = "admin"
+                Typ = "Admin"
             });
 
             types.Add(new TypUzivatel()
             {
                 Id = 2,
-                Typ = "bezny uzivatel"
+                Typ = "Běžný uživatel"
             });
 
             types.Add(new TypUzivatel()
             {
                 Id = 3,
-                Typ = "kuryr"
+                Typ = "Kurýr"
             });
 
             types.Add(new TypUzivatel()
             {
                 Id = 4,
-                Typ = "podpora"
+                Typ = "Podpora"
             });
 
             return types;

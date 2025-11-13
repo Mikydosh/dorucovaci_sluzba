@@ -20,8 +20,7 @@ namespace DorucovaciSluzba.Domain.Entities
         [Required]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
-        public string Heslo { get; set; } = string.Empty;
+        public string? Heslo { get; set; }
         public DateTime? DatumNarozeni { get; set; }
         public string? Telefon { get; set; }
         public string? Ulice { get; set; }
