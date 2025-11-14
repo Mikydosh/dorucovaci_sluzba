@@ -1,39 +1,151 @@
-﻿@model Zasilka
-
+﻿@model DorucovaciSluzba.Models.Package.CreateZasilkaViewModel
 
 @{
     ViewData["Title"] = "Vytvoření zásilky";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-iconscss
 
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <h3>Odesílatel</h3>
-        <label class="form-label" asp-for="OdesilatelId">Odesílatel</label>
-        <input class="form-control" asp-for="OdesilatelId">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="PrijemceId">Příjemce:</label>
-        <input class="form-control" asp-for="PrijemceId">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DestinaceUlice">Ulice</label>
-        <input class="form-control" asp-for="DestinaceUlice">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DestinaceCP">Č.p.</label>
-        <input class="form-control" asp-for="DestinaceCP">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DestinaceMesto">Město</label>
-        <input class="form-control" asp-for="DestinaceMesto">
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DestinacePsc">PSČ</label>
-        <input class="form-control" asp-for="DestinacePsc">
-    </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- HLAVNÍ NADPIS -->
+            <h1 class="mb-4 text-center">📦 @ViewData["Title"]</h1>
 
-    <button type="submit" class="btn btn-primary">Odeslat</button>
-</form>
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- ODESÍLATEL -->
+                <div class="card mb-5 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="mb-0 text-center">
+                            <i class="bi bi-person-fill"></i> Odesílatel
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Jméno a příjmení -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OdesilatelJmeno" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelJmeno" class="form-control" placeholder="Zadejte jméno" />
+                                <span asp-validation-for="OdesilatelJmeno" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OdesilatelPrijmeni" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelPrijmeni" class="form-control" placeholder="Zadejte příjmení" />
+                                <span asp-validation-for="OdesilatelPrijmeni" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- E-mail -->
+                        <div class="mb-3">
+                            <label asp-for="OdesilatelEmail" class="form-label fw-bold"></label>
+                            <input asp-for="OdesilatelEmail" type="email" class="form-control" placeholder="jmeno@example.com" />
+                            <span asp-validation-for="OdesilatelEmail" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Na tento e-mail budou zaslány informace o zásilce.
+                            </div>
+                        </div>
+
+                        <!-- Adresa odesílatele -->
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="OdesilatelUlice" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelUlice" class="form-control" placeholder="Např. Hlavní" />
+                                <span asp-validation-for="OdesilatelUlice" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="OdesilatelCP" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelCP" class="form-control" placeholder="Např. 123" />
+                                <span asp-validation-for="OdesilatelCP" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="OdesilatelMesto" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelMesto" class="form-control" placeholder="Např. Praha" />
+                                <span asp-validation-for="OdesilatelMesto" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="OdesilatelPsc" class="form-label fw-bold"></label>
+                                <input asp-for="OdesilatelPsc" class="form-control" placeholder="12345" maxlength="5" />
+                                <span asp-validation-for="OdesilatelPsc" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PŘÍJEMCE -->
+                <div class="card mt-4 mb-4 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="mb-0 text-center">
+                            <i class="bi bi-envelope-fill"></i> Příjemce
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Jméno a příjmení -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PrijemceJmeno" class="form-label fw-bold"></label>
+                                <input asp-for="PrijemceJmeno" class="form-control" placeholder="Zadejte jméno" />
+                                <span asp-validation-for="PrijemceJmeno" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PrijemcePrijmeni" class="form-label fw-bold"></label>
+                                <input asp-for="PrijemcePrijmeni" class="form-control" placeholder="Zadejte příjmení" />
+                                <span asp-validation-for="PrijemcePrijmeni" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- E-mail -->
+                        <div class="mb-3">
+                            <label asp-for="PrijemceEmail" class="form-label fw-bold"></label>
+                            <input asp-for="PrijemceEmail" type="email" class="form-control" placeholder="jmeno@example.com" />
+                            <span asp-validation-for="PrijemceEmail" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Příjemce bude informován o doručení zásilky.
+                            </div>
+                        </div>
+
+                        <!-- Adresa příjemce -->
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="DestinaceUlice" class="form-label fw-bold"></label>
+                                <input asp-for="DestinaceUlice" class="form-control" placeholder="Např. Hlavní" />
+                                <span asp-validation-for="DestinaceUlice" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="DestinaceCP" class="form-label fw-bold"></label>
+                                <input asp-for="DestinaceCP" class="form-control" placeholder="Např. 123" />
+                                <span asp-validation-for="DestinaceCP" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="DestinaceMesto" class="form-label fw-bold"></label>
+                                <input asp-for="DestinaceMesto" class="form-control" placeholder="Např. Praha" />
+                                <span asp-validation-for="DestinaceMesto" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="DestinacePsc" class="form-label fw-bold"></label>
+                                <input asp-for="DestinacePsc" class="form-control" placeholder="12345" maxlength="5" />
+                                <span asp-validation-for="DestinacePsc" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TLAČÍTKA -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                    <a asp-action="Select" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-x-circle"></i> Zrušit
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-send-fill"></i> Odeslat zásilku
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

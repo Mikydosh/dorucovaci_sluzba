@@ -10,5 +10,11 @@ namespace DorucovaciSluzba.Application.Abstraction
     public interface IUserAppService
     {
         IList<Uzivatel> Select();
+
+        Uzivatel? FindByEmail(string email);
+        Uzivatel Create(Uzivatel uzivatel);
+        void Update(Uzivatel uzivatel);
+        Uzivatel GetOrCreate(string jmeno, string prijmeni, string email,
+            string ulice, string cp, string mesto, string psc);
     }
 }

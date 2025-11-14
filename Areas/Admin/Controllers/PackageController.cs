@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DorucovaciSluzba.Domain.Entities;
 using DorucovaciSluzba.Application.Abstraction;
+using DorucovaciSluzba.Models.Package;
 using System.Security.Cryptography.X509Certificates;
 
 namespace DorucovaciSluzba.Areas.Admin.Controllers
@@ -9,10 +10,12 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
     public class PackageController : Controller
     {
         IPackageAppService _packageAppService;
+        IUserAppService _userAppService;
 
-        public PackageController(IPackageAppService packageAppService)
+        public PackageController(IPackageAppService packageAppService, IUserAppService userAppService)
         {
             _packageAppService = packageAppService;
+            _userAppService = userAppService;
         }
 
         public IActionResult Select()
@@ -28,11 +31,57 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Zasilka zasilka)
+        public IActionResult Create(CreateZasilkaViewModel model)
         {
-            _packageAppService.Create(zasilka);
+            // Validace modelu
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                // Najdi nebo vytvoř odesílatele
+                var odesilatel = _userAppService.GetOrCreate(
+                    model.OdesilatelJmeno,
+                    model.OdesilatelPrijmeni,
+                    model.OdesilatelEmail,
+                    model.OdesilatelUlice,
+                    model.OdesilatelCP,
+                    model.OdesilatelMesto,
+                    model.OdesilatelPsc
+                );
 
-            return RedirectToAction(nameof(PackageController.Select));
+                // Najdi nebo vytvoř příjemce
+                var prijemce = _userAppService.GetOrCreate(
+                    model.PrijemceJmeno,
+                    model.PrijemcePrijmeni,
+                    model.PrijemceEmail,
+                    model.DestinaceUlice,
+                    model.DestinaceCP,
+                    model.DestinaceMesto,
+                    model.DestinacePsc
+                );
+
+                // Vytvoř zásilku
+                var zasilka = new Zasilka
+                {
+                    OdesilatelId = odesilatel.Id,
+                    PrijemceId = prijemce.Id,
+                    DestinaceUlice = model.DestinaceUlice,
+                    DestinaceCP = model.DestinaceCP,
+                    DestinaceMesto = model.DestinaceMesto,
+                    DestinacePsc = model.DestinacePsc
+                    // Cislo, DatumOdeslani, StavId se nastaví automaticky v AppService
+                };
+
+                _packageAppService.Create(zasilka);
+
+                return RedirectToAction(nameof(PackageController.Select));
+            }
+            catch (Exception)
+            {
+                return View(model);
+            }
         }
     }
 }

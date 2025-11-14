@@ -6,7 +6,6 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<a asp-action="Create">Vytvořit balík</a>
 
 @if (Model != null && Model.Count > 0)
 {
@@ -58,6 +57,9 @@
             }
         </tbody>
     </table>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <a asp-action="Create" class="btn btn-primary btn-lg">Vytvořit balík</a>
+    </div>
 }
 else
 {

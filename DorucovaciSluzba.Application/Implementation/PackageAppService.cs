@@ -31,8 +31,33 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public void Create(Zasilka zasilka)
         {
+            // Vygeneruj unikátní číslo zásilky
+            zasilka.Cislo = GenerujCisloZasilky();
+            zasilka.DatumOdeslani = DateTime.Now;
+            zasilka.StavId = 1;
+
             _appDbContext.Zasilky.Add(zasilka);
             _appDbContext.SaveChanges();
+        }
+
+        private string GenerujCisloZasilky()
+        {
+            const int maxPokusu = 500;
+            var random = new Random();
+
+            for (int pokus = 0; pokus < maxPokusu; pokus++)
+            {
+                // Generuje číslo ve formátu xxx-xx-xx
+                string cislo = $"{random.Next(0, 1000):D3}-{random.Next(0, 100):D2}-{random.Next(0, 100):D2}";
+
+                // Kontrola, jestli číslo neexistuje v databázi
+                if (!_appDbContext.Zasilky.Any(z => z.Cislo == cislo))
+                {
+                    return cislo; // Unikátní číslo nalezeno
+                }
+            }
+
+            throw new Exception($"Nepodařilo se vygenerovat unikátní číslo zásilky po {maxPokusu} pokusech.");
         }
     }
 }

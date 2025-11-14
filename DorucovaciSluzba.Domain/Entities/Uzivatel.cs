@@ -34,5 +34,8 @@ namespace DorucovaciSluzba.Domain.Entities
 
         public ICollection<Zasilka> OdeslaneZasilky { get; set; } = new List<Zasilka>();
         public ICollection<Zasilka> PrijateZasilky { get; set; } = new List<Zasilka>();
+
+        [NotMapped] // Helper pro kontrolu
+        public bool JeRegistrovany => !string.IsNullOrEmpty(Heslo); // Podle hesla ověří, jestli je uživatel registrovaný
     }
 }
