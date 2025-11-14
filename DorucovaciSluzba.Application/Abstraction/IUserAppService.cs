@@ -16,5 +16,6 @@ namespace DorucovaciSluzba.Application.Abstraction
         void Update(Uzivatel uzivatel);
         Uzivatel GetOrCreate(string jmeno, string prijmeni, string email,
             string ulice, string cp, string mesto, string psc);
+        bool Delete(int id);
     }
 }

@@ -59,5 +59,16 @@ namespace DorucovaciSluzba.Application.Implementation
 
             throw new Exception($"Nepodařilo se vygenerovat unikátní číslo zásilky po {maxPokusu} pokusech.");
         }
+        public bool Delete(int zasilkaId)
+        {
+            var zasilka = _appDbContext.Zasilky.Find(zasilkaId);
+            if (zasilka == null)
+            {
+                return false; // Zásilka neexistuje
+            }
+            _appDbContext.Zasilky.Remove(zasilka);
+            _appDbContext.SaveChanges();
+            return true;
+        }
     }
 }

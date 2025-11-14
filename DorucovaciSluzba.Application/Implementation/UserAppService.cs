@@ -87,5 +87,17 @@ namespace DorucovaciSluzba.Application.Implementation
 
             return Create(novy);
         }
+
+        public bool Delete(int userId)
+        {
+            var uzivatel = _appDbContext.Uzivatele.Find(userId);
+            if (uzivatel == null)
+            {
+                return false; // uživatel neexistuje
+            }
+            _appDbContext.Uzivatele.Remove(uzivatel);
+            _appDbContext.SaveChanges();
+            return true;
+        }
     }
 }

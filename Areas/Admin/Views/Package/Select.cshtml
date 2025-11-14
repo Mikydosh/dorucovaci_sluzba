@@ -20,6 +20,7 @@
                 <th>Adresa doručení</th>
                 <th>Kurýr</th>
                 <th>Stav</th>
+                <th>Akce</th>
             </tr>
         </thead>
         <tbody>
@@ -53,15 +54,19 @@
                     <td>
                         @zasilka.Stav?.Stav
                     </td>
+                    <td>
+                        <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@zasilka.Id">Smazat</a>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-        <a asp-action="Create" class="btn btn-primary btn-lg">Vytvořit balík</a>
-    </div>
 }
 else
 {
     <p>Žádné zásilky nebyly nalezeny.</p>
 }
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+    <a asp-action="Create" class="btn btn-primary btn-lg">Vytvořit balík</a>
+</div>

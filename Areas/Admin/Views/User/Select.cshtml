@@ -23,6 +23,7 @@
                     <th scope="col">Telefon</th>
                     <th scope="col">Adresa</th>
                     <th scope="col">Typ uživatele</th>
+                    <th scope="col">Akce</th>
 
                 </tr>
             </thead>
@@ -45,6 +46,9 @@
                             }
                         </td>
                         <td>@uzivatel.Typ?.Typ</td>
+                        <td>
+                            <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@uzivatel.Id">Smazat</a>
+                        </td>
                     </tr>
                 }
 

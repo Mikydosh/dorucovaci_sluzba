@@ -19,5 +19,19 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             IList<Uzivatel> users = _userAppService.Select();
             return View(users);
         }
+
+        public IActionResult Delete(int id)
+        {
+            bool deleted = _userAppService.Delete(id);
+
+            if (deleted)
+            {
+                return RedirectToAction(nameof(UserController.Select));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

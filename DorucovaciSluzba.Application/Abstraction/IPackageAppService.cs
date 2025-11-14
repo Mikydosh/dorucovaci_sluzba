@@ -6,5 +6,6 @@ namespace DorucovaciSluzba.Application.Abstraction
     {
         IList<Zasilka> Select();
         void Create(Zasilka zasilka);
+        bool Delete(int zasilkaId);
     }
 }

@@ -83,5 +83,17 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return View(model);
             }
         }
+
+        public IActionResult Delete(int id)
+        {
+            bool deleted = _packageAppService.Delete(id);
+
+            if (deleted){
+                return RedirectToAction(nameof(PackageController.Select));
+            }
+            else {
+                return NotFound();
+            }
+        }
     }
 }
