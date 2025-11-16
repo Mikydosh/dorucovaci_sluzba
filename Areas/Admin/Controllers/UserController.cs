@@ -20,7 +20,6 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(users);
         }
 
-        [HttpPost]
         public IActionResult Delete(int id)
         {
             bool deleted = _userAppService.Delete(id);
