@@ -13,7 +13,6 @@ namespace DorucovaciSluzba.Domain.Entities
     {
         public string Cislo { get; set; } = string.Empty;
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DatumOdeslani { get; set; }
 
         [ForeignKey(nameof(Stav))]

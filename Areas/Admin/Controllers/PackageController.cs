@@ -195,16 +195,12 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
             try
             {
-                var zasilka = _packageAppService.GetById(model.Id);
-
-                if (zasilka == null)
+                var zasilka = new Zasilka
                 {
-                    return NotFound();
-                }
-
-                // Aktualizuj POUZE stav a kurýra
-                zasilka.StavId = model.StavId;
-                zasilka.KuryrId = model.KuryrId;
+                    Id = model.Id,
+                    StavId = model.StavId,
+                    KuryrId = model.KuryrId
+                };
 
                 _packageAppService.Update(zasilka);
 

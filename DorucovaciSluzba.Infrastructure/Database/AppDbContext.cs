@@ -1,6 +1,7 @@
 ﻿using DorucovaciSluzba.Domain.Entities;
 using DorucovaciSluzba.Infrastructure.Database.Seeding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace DorucovaciSluzba.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Zasilka>()
+                .Property(z => z.DatumOdeslani)
+                .ValueGeneratedOnAdd()  // Fix: Datum se vygeneruje se jen při Add, ne při Update
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             modelBuilder.Entity<Zasilka>()
                 .HasOne(z => z.Odesilatel)
