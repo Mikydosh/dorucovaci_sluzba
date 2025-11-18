@@ -1,27 +1,21 @@
 ﻿using DorucovaciSluzba.Application.Abstraction;
 using DorucovaciSluzba.Domain.Entities;
-using DorucovaciSluzba.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DorucovaciSluzba.Application.Implementation
 {
     public class PackageAppService : IPackageAppService
     {
-        AppDbContext _appDbContext;
+        private readonly DbContext _dbContext;
 
-        public PackageAppService(AppDbContext appDbContext)
+        public PackageAppService(DbContext dbContext)
         {
-            _appDbContext = appDbContext;
+            _dbContext = dbContext;
         }
 
         public IList<Zasilka> Select()
         {
-            return _appDbContext.Zasilky
+            return _dbContext.Set<Zasilka>()
                     .Include(z => z.Odesilatel)
                     .Include(z => z.Prijemce)
                     .Include(z => z.Kuryr)
@@ -36,8 +30,8 @@ namespace DorucovaciSluzba.Application.Implementation
             zasilka.DatumOdeslani = DateTime.Now;
             zasilka.StavId = 1;
 
-            _appDbContext.Zasilky.Add(zasilka);
-            _appDbContext.SaveChanges();
+            _dbContext.Set<Zasilka>().Add(zasilka);
+            _dbContext.SaveChanges();
         }
 
         private string GenerujCisloZasilky()
@@ -51,9 +45,9 @@ namespace DorucovaciSluzba.Application.Implementation
                 string cislo = $"{random.Next(0, 1000):D3}-{random.Next(0, 100):D2}-{random.Next(0, 100):D2}";
 
                 // Kontrola, jestli číslo neexistuje v databázi
-                if (!_appDbContext.Zasilky.Any(z => z.Cislo == cislo))
+                if (!_dbContext.Set<Zasilka>().Any(z => z.Cislo == cislo))
                 {
-                    return cislo; // Unikátní číslo nalezeno
+                    return cislo;
                 }
             }
 
@@ -61,19 +55,19 @@ namespace DorucovaciSluzba.Application.Implementation
         }
         public bool Delete(int zasilkaId)
         {
-            var zasilka = _appDbContext.Zasilky.Find(zasilkaId);
+            var zasilka = _dbContext.Set<Zasilka>().Find(zasilkaId);
             if (zasilka == null)
             {
                 return false; // Zásilka neexistuje
             }
-            _appDbContext.Zasilky.Remove(zasilka);
-            _appDbContext.SaveChanges();
+            _dbContext.Set<Zasilka>().Remove(zasilka);
+            _dbContext.SaveChanges();
             return true;
         }
 
         public Zasilka? FindByCisloAndEmail(string cislo, string email)
         {
-            return _appDbContext.Zasilky
+            return _dbContext.Set<Zasilka>()
                 .Include(z => z.Odesilatel)
                 .Include(z => z.Prijemce)
                 .Include(z => z.Kuryr)
@@ -87,7 +81,7 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public Zasilka? GetById(int id)
         {
-            return _appDbContext.Zasilky
+            return _dbContext.Set<Zasilka>()
                 .Include(z => z.Odesilatel)
                 .Include(z => z.Prijemce)
                 .Include(z => z.Kuryr)
@@ -97,7 +91,7 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public void Update(Zasilka zasilka)
         {
-            var existujiciZasilka = _appDbContext.Zasilky.Find(zasilka.Id);
+            var existujiciZasilka = _dbContext.Set<Zasilka>().Find(zasilka.Id);
 
             if (existujiciZasilka == null)
             {
@@ -107,12 +101,12 @@ namespace DorucovaciSluzba.Application.Implementation
             existujiciZasilka.StavId = zasilka.StavId;
             existujiciZasilka.KuryrId = zasilka.KuryrId;
 
-            _appDbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
 
         public IList<Uzivatel> GetAllCouriers()
         {
-            return _appDbContext.Uzivatele
+            return _dbContext.Set<Uzivatel>()
                 .Where(u => u.TypId == 3) // TypId 3 = Kurýr
                 .OrderBy(u => u.Prijmeni)
                 .ThenBy(u => u.Jmeno)
@@ -121,7 +115,7 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public IList<StavZasilka> GetAllStates()
         {
-            return _appDbContext.StavyZasilek
+            return _dbContext.Set<StavZasilka>()
                 .OrderBy(s => s.Id)
                 .ToList();
         }

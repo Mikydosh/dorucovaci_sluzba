@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace DorucovaciSluzba.Domain.Validations
+namespace DorucovaciSluzba.Validations
 {
     public class EmailCZAttribute : ValidationAttribute, IClientModelValidator
     {

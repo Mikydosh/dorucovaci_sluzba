@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using DorucovaciSluzba.Infrastructure.Database;
 using DorucovaciSluzba.Application.Abstraction;
 using DorucovaciSluzba.Application.Implementation;
@@ -8,10 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Databázové připojení
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
-ServerVersion serverVersion = new MySqlServerVersion("8.0.43");
-builder.Services.AddDbContext<AppDbContext>(optionsBuilder => optionsBuilder.UseMySql(connectionString, serverVersion));
+var serverVersion = ServerVersion.AutoDetect(connectionString);
 
+// Registrace AppDbContext
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+    optionsBuilder.UseMySql(connectionString, serverVersion));
+
+// DŮLEŽITÉ: Registruj AppDbContext také jako DbContext (pro Application služby)
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
+// Registrace Application Services
 builder.Services.AddScoped<IPackageAppService, PackageAppService>();
 builder.Services.AddScoped<IUserAppService, UserAppService>();
 
@@ -21,25 +29,22 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+// Area routing
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+// Default routing
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
