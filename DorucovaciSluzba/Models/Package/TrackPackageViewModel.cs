@@ -1,4 +1,4 @@
-﻿using DorucovaciSluzba.Domain.Validations;
+﻿using DorucovaciSluzba.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace DorucovaciSluzba.Models.Package

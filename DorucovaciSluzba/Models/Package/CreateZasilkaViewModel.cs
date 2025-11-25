@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DorucovaciSluzba.Domain.Validations;
+using DorucovaciSluzba.Validations;
 
 namespace DorucovaciSluzba.Models.Package
 {

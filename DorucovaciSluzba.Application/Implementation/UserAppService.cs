@@ -1,27 +1,21 @@
 ﻿using DorucovaciSluzba.Application.Abstraction;
 using DorucovaciSluzba.Domain.Entities;
-using DorucovaciSluzba.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DorucovaciSluzba.Application.Implementation
 {
     public class UserAppService : IUserAppService
     {
-        AppDbContext _appDbContext;
+        private readonly DbContext _dbContext;
 
-        public UserAppService(AppDbContext appDbContext)
+        public UserAppService(DbContext dbContext)
         {
-            _appDbContext = appDbContext;
+            _dbContext = dbContext;
         }
 
         public IList<Uzivatel> Select()
         {
-            return _appDbContext.Uzivatele
+            return _dbContext.Set<Uzivatel>()
                    .Include(u => u.Typ)
                    .ToList();
         }
@@ -31,21 +25,21 @@ namespace DorucovaciSluzba.Application.Implementation
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            return _appDbContext.Uzivatele
+            return _dbContext.Set<Uzivatel>()
                 .FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         }
 
         public Uzivatel Create(Uzivatel uzivatel)
         {
-            _appDbContext.Uzivatele.Add(uzivatel);
-            _appDbContext.SaveChanges();
+            _dbContext.Set<Uzivatel>().Add(uzivatel);
+            _dbContext.SaveChanges();
             return uzivatel;
         }
 
         public void Update(Uzivatel uzivatel)
         {
-            _appDbContext.Uzivatele.Update(uzivatel);
-            _appDbContext.SaveChanges();
+            _dbContext.Set<Uzivatel>().Update(uzivatel);
+            _dbContext.SaveChanges();
         }
 
         public Uzivatel GetOrCreate(string jmeno, string prijmeni, string email,
@@ -90,7 +84,7 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public bool Delete(int userId)
         {
-            var uzivatel = _appDbContext.Uzivatele.Find(userId);
+            var uzivatel = _dbContext.Set<Uzivatel>().Find(userId);
             if (uzivatel == null)
             {
                 return false; // uživatel neexistuje
@@ -98,8 +92,8 @@ namespace DorucovaciSluzba.Application.Implementation
 
             try
             {
-                _appDbContext.Uzivatele.Remove(uzivatel);
-                _appDbContext.SaveChanges();
+                _dbContext.Set <Uzivatel>().Remove(uzivatel);
+                _dbContext.SaveChanges();
                 return true;
             }
             catch
@@ -110,14 +104,14 @@ namespace DorucovaciSluzba.Application.Implementation
 
         public Uzivatel? GetById(int id)
         {
-            return _appDbContext.Uzivatele
+            return _dbContext.Set<Uzivatel>()
                 .Include(u => u.Typ) // Načti i typ/roli uživatele
                 .FirstOrDefault(u => u.Id == id);
         }
 
         public IList<TypUzivatel> GetAllUserTypes()
         {
-            return _appDbContext.TypyUzivatelu
+            return _dbContext.Set<TypUzivatel>()
                 .OrderBy(t => t.Typ) // Seřaď podle názvu
                 .ToList();
         }
