@@ -50,6 +50,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Registrace Application Services
 builder.Services.AddScoped<IPackageAppService, PackageAppService>();
 builder.Services.AddScoped<IAccountService, AccountIdentityService>();
+builder.Services.AddScoped<ISecurityService, SecurityIdentityService>();
+
 
 var app = builder.Build();
 
