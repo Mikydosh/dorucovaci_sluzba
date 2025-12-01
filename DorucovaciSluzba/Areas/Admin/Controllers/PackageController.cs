@@ -3,6 +3,7 @@ using DorucovaciSluzba.Domain.Entities;
 using DorucovaciSluzba.Domain.Enums;
 using DorucovaciSluzba.Infrastructure.Identity;
 using DorucovaciSluzba.Models.Package;
+using DorucovaciSluzba.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -237,7 +238,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                     return View(model);
                 }
 
-                // ZMĚNA: Ověř, že email patří odesílateli nebo příjemci
+                // Ověř, že email patří odesílateli nebo příjemci
                 var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
                 var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
 
@@ -246,6 +247,16 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("", "Zásilka nebyla nalezena. Zkontrolujte číslo zásilky a e-mail.");
                     return View(model);
+                }
+
+                // Použití SessionExtensions
+                var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages")
+                                         ?? new List<int>();
+
+                if (!authorizedPackages.Contains(zasilka.Id))
+                {
+                    authorizedPackages.Add(zasilka.Id);
+                    HttpContext.Session.SetObject("AuthorizedPackages", authorizedPackages);
                 }
 
                 return RedirectToAction("Detail", new { id = zasilka.Id });
@@ -268,7 +279,32 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // NOVÉ: Načti uživatele z UserManager
+            // KONTROLA OPRÁVNĚNÍ
+            bool isAuthorized = false;
+
+            // 1. Je uživatel přihlášený jako Admin nebo Podpora?
+            if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.Podpora)))
+            {
+                isAuthorized = true;
+            }
+            // 2. Má zásilku v seznamu autorizovaných? (přišel přes Track formulář)
+            else
+            {
+                // Použití SessionExtensions
+                var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
+                if (authorizedPackages != null && authorizedPackages.Contains(id))
+                {
+                    isAuthorized = true;
+                }
+            }
+
+            // 3. Není autorizován? → Přesměruj na Track
+            if (!isAuthorized)
+            {
+                return RedirectToAction("Track");
+            }
+
+            // Načtení souvisejících uživatelů
             var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
             var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
             User? kuryr = null;
