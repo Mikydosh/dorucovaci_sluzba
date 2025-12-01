@@ -287,10 +287,28 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             {
                 isAuthorized = true;
             }
-            // 2. Má zásilku v seznamu autorizovaných? (přišel přes Track formulář)
+            // 2. Je uživatel Kurýr a je mu zásilka přiřazena?
+            else if (User.IsInRole(nameof(Roles.Kuryr)))
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser != null && zasilka.KuryrId == currentUser.Id)
+                {
+                    isAuthorized = true;
+                }
+            }
+            // 3. Je uživatel běžný Uživatel a je odesílatel nebo příjemce?
+            else if (User.IsInRole(nameof(Roles.Uzivatel)))
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser != null &&
+                    (zasilka.OdesilatelId == currentUser.Id || zasilka.PrijemceId == currentUser.Id))
+                {
+                    isAuthorized = true;
+                }
+            }
+            // 4. Má zásilku v seznamu autorizovaných? (přišel přes Track formulář)
             else
             {
-                // Použití SessionExtensions
                 var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
                 if (authorizedPackages != null && authorizedPackages.Contains(id))
                 {
@@ -298,7 +316,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 }
             }
 
-            // 3. Není autorizován? → Přesměruj na Track
+            // 5. Není autorizován? → Přesměruj na Track
             if (!isAuthorized)
             {
                 return RedirectToAction("Track");

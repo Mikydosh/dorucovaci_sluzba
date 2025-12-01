@@ -8,7 +8,7 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
         {
             return new List<Zasilka>
             {
-                // Karel → Eva (kurýr Petr)
+            
                 new Zasilka
                 {
                     Id = 1,
@@ -19,12 +19,12 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
                     DestinaceCP = "456",
                     DestinaceMesto = "Brno",
                     DestinacePsc = "602 00",
-                    OdesilatelId = 5, // Karel
-                    PrijemceId = 6,   // Eva
-                    KuryrId = 2       // Petr
+                    OdesilatelId = 7,
+                    PrijemceId = 8,
+                    KuryrId = 4
                 },
                 
-                // Eva → Tomáš (kurýr Lukáš, v přepravě)
+                
                 new Zasilka
                 {
                     Id = 2,
@@ -35,12 +35,12 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
                     DestinaceCP = "789",
                     DestinaceMesto = "Ostrava",
                     DestinacePsc = "700 30",
-                    OdesilatelId = 6, // Eva
-                    PrijemceId = 7,   // Tomáš
-                    KuryrId = 3       // Lukáš
+                    OdesilatelId = 7,
+                    PrijemceId = 9, 
+                    KuryrId = 4     
                 },
                 
-                // Tomáš → Jana (zatím bez kurýra)
+                
                 new Zasilka
                 {
                     Id = 3,
@@ -51,12 +51,12 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
                     DestinaceCP = "321",
                     DestinaceMesto = "Plzeň",
                     DestinacePsc = "301 00",
-                    OdesilatelId = 7, // Tomáš
-                    PrijemceId = 8,   // Jana
+                    OdesilatelId = 9,
+                    PrijemceId = 11,  
                     KuryrId = null
                 },
                 
-                // Jana → Karel (kurýr Petr)
+
                 new Zasilka
                 {
                     Id = 4,
@@ -67,12 +67,12 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
                     DestinaceCP = "123",
                     DestinaceMesto = "Praha",
                     DestinacePsc = "110 00",
-                    OdesilatelId = 8, // Jana
-                    PrijemceId = 5,   // Karel
-                    KuryrId = 2       // Petr
+                    OdesilatelId = 10,
+                    PrijemceId = 11,  
+                    KuryrId = 4      
                 },
                 
-                // Karel → Tomáš (kurýr Lukáš, doručeno)
+
                 new Zasilka
                 {
                     Id = 5,
@@ -83,25 +83,40 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
                     DestinaceCP = "789",
                     DestinaceMesto = "Ostrava",
                     DestinacePsc = "700 30",
-                    OdesilatelId = 5, // Karel
-                    PrijemceId = 7,   // Tomáš
-                    KuryrId = 3       // Lukáš
+                    OdesilatelId = 8,
+                    PrijemceId = 10,  
+                    KuryrId = 5      
                 },
                 
-                // Eva → Karel (reklamováno)
+
                 new Zasilka
                 {
                     Id = 6,
                     Cislo = "678-90-12",
                     DatumOdeslani = new DateTime(2025, 11, 15, 8, 30, 0),
-                    StavId = 4, // Reklamováno
+                    StavId = 2, // V přepravě
                     DestinaceUlice = "Hlavní",
                     DestinaceCP = "123",
                     DestinaceMesto = "Praha",
                     DestinacePsc = "110 00",
-                    OdesilatelId = 6, // Eva
-                    PrijemceId = 5,   // Karel
-                    KuryrId = 2       // Petr
+                    OdesilatelId = 11,
+                    PrijemceId = 7,  
+                    KuryrId = 5      
+                },
+
+                new Zasilka
+                {
+                    Id = 7,
+                    Cislo = "789-01-23",
+                    DatumOdeslani = new DateTime(2025, 11, 15, 8, 30, 0),
+                    StavId = 2, // V přepravě
+                    DestinaceUlice = "Školní",
+                    DestinaceCP = "300",
+                    DestinaceMesto = "Zlín",
+                    DestinacePsc = "760 01",
+                    OdesilatelId = 7,
+                    PrijemceId = 10,
+                    KuryrId = 6
                 }
             };
         }

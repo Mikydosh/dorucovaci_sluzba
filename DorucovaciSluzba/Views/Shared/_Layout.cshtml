@@ -7,6 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DorucovaciSluzba.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
@@ -42,6 +43,24 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="Select">Uživatelé</a>
+                            </li>
+                        }
+                        <!-- Zásilky uživatele - pouze uživatel  -->
+                        @if (User.IsInRole(nameof(Roles.Uzivatel)))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Customer" asp-controller="MyPackages" asp-action="Index">
+                                    <i class="fas fa-box"></i> Moje zásilky
+                                </a>
+                            </li>
+                        }
+                        <!-- Zásilky kurýra - pouze kurýr  -->
+                        @if (User.IsInRole(nameof(Roles.Kuryr)))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Delivery" asp-controller="MyDeliveries" asp-action="Index">
+                                    <i class="fas fa-truck"></i> Moje doručení
+                                </a>
                             </li>
                         }
                     </ul>

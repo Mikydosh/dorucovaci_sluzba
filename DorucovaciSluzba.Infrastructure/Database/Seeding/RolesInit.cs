@@ -27,7 +27,7 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
             Role roleKuryr = new Role()
             {
                 Id = 3,
-                Name = "Kurýr",
+                Name = "Kuryr",
                 NormalizedName = "KURYR",
                 ConcurrencyStamp = "be0efcde-9d0a-461d-8eb6-444b043d6660"
             };
@@ -35,7 +35,7 @@ namespace DorucovaciSluzba.Infrastructure.Database.Seeding
             Role roleUzivatel = new Role()
             {
                 Id = 4,
-                Name = "Uživatel",
+                Name = "Uzivatel",
                 NormalizedName = "UZIVATEL",
                 ConcurrencyStamp = "29dafca7-cd20-4cd9-a3dd-4779d7bac3ee"
             };
