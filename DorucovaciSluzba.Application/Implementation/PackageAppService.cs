@@ -97,5 +97,23 @@ namespace DorucovaciSluzba.Application.Implementation
                 .OrderBy(s => s.Id)
                 .ToList();
         }
+
+        public IList<Zasilka> SelectForUser(int userId)
+        {
+            return _dbContext.Set<Zasilka>()
+                .Include(z => z.Stav)
+                .Where(z => z.OdesilatelId == userId || z.PrijemceId == userId)
+                .OrderByDescending(z => z.DatumOdeslani)
+                .ToList();
+        }
+
+        public IList<Zasilka> SelectForKuryr(int kuryrId)
+        {
+            return _dbContext.Set<Zasilka>()
+                .Include(z => z.Stav)
+                .Where(z => z.KuryrId == kuryrId)
+                .OrderByDescending(z => z.DatumOdeslani)
+                .ToList();
+        }
     }
 }

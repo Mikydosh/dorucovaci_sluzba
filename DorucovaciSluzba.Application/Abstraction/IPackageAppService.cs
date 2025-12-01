@@ -13,5 +13,8 @@ namespace DorucovaciSluzba.Application.Abstraction
         void Update(Zasilka zasilka);
 
         IList<StavZasilka> GetAllStates();
+
+        IList<Zasilka> SelectForUser(int userId);
+        IList<Zasilka> SelectForKuryr(int kuryrId);
     }
 }

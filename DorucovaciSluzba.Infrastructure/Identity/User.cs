@@ -1,5 +1,5 @@
-﻿using DorucovaciSluzba.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using DorucovaciSluzba.Domain.Entities;
 
 namespace DorucovaciSluzba.Infrastructure.Identity
 {
