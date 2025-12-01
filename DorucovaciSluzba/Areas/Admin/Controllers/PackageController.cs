@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DorucovaciSluzba.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
     public class PackageController : Controller
     {
         IPackageAppService _packageAppService;
@@ -21,6 +20,12 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             _packageAppService = packageAppService;
             _userManager = userManager;
         }
+
+        // ========================================
+        // CHRÁNĚNÉ AKCE (pouze Admin a Podpora)
+        // ========================================
+
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
 
         public async Task<IActionResult> Select()
         {
@@ -50,12 +55,14 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
         public async Task<IActionResult> Create(CreateZasilkaViewModel model)
         {
             // Validace modelu
@@ -109,6 +116,179 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
         }
 
+
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        public IActionResult Delete(int id)
+        {
+            bool deleted = _packageAppService.Delete(id);
+
+            if (deleted){
+                return RedirectToAction(nameof(PackageController.Select));
+            }
+            else {
+                return NotFound();
+            }
+        }
+
+        
+
+
+        [HttpGet]
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var zasilka = _packageAppService.GetById(id);
+
+            if (zasilka == null)
+            {
+                return NotFound();
+            }
+
+            // NOVÉ: Načti uživatele
+            var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
+            var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+
+            var viewModel = new EditUserViewModel
+            {
+                Id = zasilka.Id,
+                Cislo = zasilka.Cislo,
+                DatumOdeslani = zasilka.DatumOdeslani,
+                OdesilatelJmeno = $"{odesilatel?.FirstName} {odesilatel?.LastName}",
+                PrijemceJmeno = $"{prijemce?.FirstName} {prijemce?.LastName}",
+                DestinaceAdresa = $"{zasilka.DestinaceUlice} {zasilka.DestinaceCP}, {zasilka.DestinaceMesto}, {zasilka.DestinacePsc}",
+                StavId = zasilka.StavId,
+                KuryrId = zasilka.KuryrId,
+                DostupneStavy = _packageAppService.GetAllStates().ToList(),
+
+                // ZMĚNA: Načti kurýry z UserManager
+                DostupniKuryri = (await _userManager.GetUsersInRoleAsync("Kuryr")).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        public IActionResult Edit(EditUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.DostupneStavy = _packageAppService.GetAllStates().ToList();
+                model.DostupniKuryri = _userManager.GetUsersInRoleAsync("Kuryr").Result.ToList();
+                return View(model);
+            }
+
+            try
+            {
+                var zasilka = new Zasilka
+                {
+                    Id = model.Id,
+                    StavId = model.StavId,
+                    KuryrId = model.KuryrId
+                };
+
+                _packageAppService.Update(zasilka);
+
+                TempData["SuccessMessage"] = $"Zásilka byla úspěšně aktualizována!";
+
+                return RedirectToAction("Select");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Chyba při aktualizaci: {ex.Message}");
+                model.DostupneStavy = _packageAppService.GetAllStates().ToList();
+                model.DostupniKuryri = _userManager.GetUsersInRoleAsync("Kuryr").Result.ToList();
+                return View(model);
+            }
+        }
+
+        // ========================================
+        // VEŘEJNÉ AKCE (bez autorizace)
+        // ========================================
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Track()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Track(TrackPackageViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                var zasilka = _packageAppService.FindByCisloAndEmail(
+                    model.CisloZasilky,
+                    model.Email
+                );
+
+                if (zasilka == null)
+                {
+                    ModelState.AddModelError("", "Zásilka nebyla nalezena. Zkontrolujte číslo zásilky a e-mail.");
+                    return View(model);
+                }
+
+                // ZMĚNA: Ověř, že email patří odesílateli nebo příjemci
+                var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
+                var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+
+                if (odesilatel?.Email.ToLower() != model.Email.ToLower() &&
+                    prijemce?.Email.ToLower() != model.Email.ToLower())
+                {
+                    ModelState.AddModelError("", "Zásilka nebyla nalezena. Zkontrolujte číslo zásilky a e-mail.");
+                    return View(model);
+                }
+
+                return RedirectToAction("Detail", new { id = zasilka.Id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Chyba při vyhledávání: {ex.Message}");
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var zasilka = _packageAppService.GetById(id);
+
+            if (zasilka == null)
+            {
+                return NotFound();
+            }
+
+            // NOVÉ: Načti uživatele z UserManager
+            var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
+            var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+            User? kuryr = null;
+            if (zasilka.KuryrId.HasValue)
+            {
+                kuryr = await _userManager.FindByIdAsync(zasilka.KuryrId.Value.ToString());
+            }
+
+            // Předej do ViewBag
+            ViewBag.Odesilatel = odesilatel;
+            ViewBag.Prijemce = prijemce;
+            ViewBag.Kuryr = kuryr;
+
+            return View(zasilka);
+        }
+
+        // ========================================
+        // HELPER METODY
+        // ========================================
+
         private async Task<User> GetOrCreateUserAsync(
             string jmeno, string prijmeni, string email,
             string ulice, string cp, string mesto, string psc)
@@ -159,160 +339,6 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             throw new Exception($"Nepodařilo se vytvořit uživatele: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
 
-        public IActionResult Delete(int id)
-        {
-            bool deleted = _packageAppService.Delete(id);
-
-            if (deleted){
-                return RedirectToAction(nameof(PackageController.Select));
-            }
-            else {
-                return NotFound();
-            }
-        }
-
-        [HttpGet]
-        public IActionResult Track()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Track(TrackPackageViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            try
-            {
-                var zasilka = _packageAppService.FindByCisloAndEmail(
-                    model.CisloZasilky,
-                    model.Email
-                );
-
-                if (zasilka == null)
-                {
-                    ModelState.AddModelError("", "Zásilka nebyla nalezena. Zkontrolujte číslo zásilky a e-mail.");
-                    return View(model);
-                }
-
-                // ZMĚNA: Ověř, že email patří odesílateli nebo příjemci
-                var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
-                var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
-
-                if (odesilatel?.Email.ToLower() != model.Email.ToLower() &&
-                    prijemce?.Email.ToLower() != model.Email.ToLower())
-                {
-                    ModelState.AddModelError("", "Zásilka nebyla nalezena. Zkontrolujte číslo zásilky a e-mail.");
-                    return View(model);
-                }
-
-                return RedirectToAction("Detail", new { id = zasilka.Id });
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", $"Chyba při vyhledávání: {ex.Message}");
-                return View(model);
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Detail(int id)
-        {
-            var zasilka = _packageAppService.GetById(id);
-
-            if (zasilka == null)
-            {
-                return NotFound();
-            }
-
-            // NOVÉ: Načti uživatele z UserManager
-            var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
-            var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
-            User? kuryr = null;
-            if (zasilka.KuryrId.HasValue)
-            {
-                kuryr = await _userManager.FindByIdAsync(zasilka.KuryrId.Value.ToString());
-            }
-
-            // Předej do ViewBag
-            ViewBag.Odesilatel = odesilatel;
-            ViewBag.Prijemce = prijemce;
-            ViewBag.Kuryr = kuryr;
-
-            return View(zasilka);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var zasilka = _packageAppService.GetById(id);
-
-            if (zasilka == null)
-            {
-                return NotFound();
-            }
-
-            // NOVÉ: Načti uživatele
-            var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
-            var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
-
-            var viewModel = new EditUserViewModel
-            {
-                Id = zasilka.Id,
-                Cislo = zasilka.Cislo,
-                DatumOdeslani = zasilka.DatumOdeslani,
-                OdesilatelJmeno = $"{odesilatel?.FirstName} {odesilatel?.LastName}",
-                PrijemceJmeno = $"{prijemce?.FirstName} {prijemce?.LastName}",
-                DestinaceAdresa = $"{zasilka.DestinaceUlice} {zasilka.DestinaceCP}, {zasilka.DestinaceMesto}, {zasilka.DestinacePsc}",
-                StavId = zasilka.StavId,
-                KuryrId = zasilka.KuryrId,
-                DostupneStavy = _packageAppService.GetAllStates().ToList(),
-
-                // ZMĚNA: Načti kurýry z UserManager
-                DostupniKuryri = (await _userManager.GetUsersInRoleAsync("Kuryr")).ToList()
-            };
-
-            return View(viewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(EditUserViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.DostupneStavy = _packageAppService.GetAllStates().ToList();
-                model.DostupniKuryri = _userManager.GetUsersInRoleAsync("Kuryr").Result.ToList();
-                return View(model);
-            }
-
-            try
-            {
-                var zasilka = new Zasilka
-                {
-                    Id = model.Id,
-                    StavId = model.StavId,
-                    KuryrId = model.KuryrId
-                };
-
-                _packageAppService.Update(zasilka);
-
-                TempData["SuccessMessage"] = $"Zásilka byla úspěšně aktualizována!";
-
-                return RedirectToAction("Select");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", $"Chyba při aktualizaci: {ex.Message}");
-                model.DostupneStavy = _packageAppService.GetAllStates().ToList();
-                model.DostupniKuryri = _userManager.GetUsersInRoleAsync("Kuryr").Result.ToList();
-                return View(model);
-            }
-        }
     }
 }
 
