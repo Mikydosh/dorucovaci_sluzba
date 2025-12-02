@@ -25,174 +25,236 @@
         return "asc";
     }
 }
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-box me-2"></i>@ViewData["Title"]
+            </h1>
 
-<h1>@ViewData["Title"]</h1>
+            <!-- Vyhledávací formulář -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <form asp-action="Select" method="get" class="row g-3">
+                        <div class="col-md-10">
+                            <input type="text"
+                                   name="search"
+                                   class="form-control form-control-lg"
+                                   placeholder="Vyhledat zásilku..."
+                                   value="@currentSearch" />
+                        </div>
 
-<!-- Vyhledávací formulář -->
-<div class="row mb-3 mt-3">
-    <div class="col-md-12">
-        <form asp-action="Select" method="get" class="d-flex gap-2">
-            <input type="text"
-                   name="search"
-                   class="form-control"
-                   placeholder="Vyhledat zásilku..."
-                   value="@currentSearch" />
+                        <!-- Zachování řazení -->
+                        <input type="hidden" name="sortBy" value="@currentSort" />
+                        <input type="hidden" name="sortOrder" value="@currentOrder" />
 
-            <!-- Zachování řazení při vyhledávání -->
-            <input type="hidden" name="sortBy" value="@currentSort" />
-            <input type="hidden" name="sortOrder" value="@currentOrder" />
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-search me-2"></i>Hledat
+                            </button>
+                        </div>
 
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-search"></i> Hledat
-            </button>
+                        @if (!string.IsNullOrEmpty(currentSearch))
+                        {
+                            <div class="col-12">
+                                <a asp-action="Select"
+                                   asp-route-sortBy="@currentSort"
+                                   asp-route-sortOrder="@currentOrder"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Zrušit vyhledávání
+                                </a>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
 
             @if (!string.IsNullOrEmpty(currentSearch))
             {
-                <a asp-action="Select"
-                   asp-route-sortBy="@currentSort"
-                   asp-route-sortOrder="@currentOrder"
-                   class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Zrušit
-                </a>
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <div>
+                        Vyhledávání: <strong>@currentSearch</strong> —
+                        Nalezeno: <strong>@Model.Count</strong> výsledků
+                    </div>
+                </div>
             }
-        </form>
-    </div>
-</div>
 
-@if (!string.IsNullOrEmpty(currentSearch))
-{
-    <div class="alert alert-info">
-        Vyhledávání: <strong>@currentSearch</strong>
-        (@Model.Count výsledků)
-    </div>
-}
-
-@if (Model != null && Model.Count > 0)
-{
-    <table class="table">
-        <!-- ... zbytek tabulky ... -->
-        <thead>
-            <tr>
-                <th>
-                    <a asp-action="Select"
-                       asp-route-sortBy="Id"
-                       asp-route-sortOrder="@GetNextOrder("Id")"
-                       asp-route-search="@currentSearch"
-                       style="text-decoration: none; color: inherit;">
-                        ID @GetSortIcon("Id")
-                    </a>
-                </th>
-                <th>
-                    <a asp-action="Select"
-                       asp-route-sortBy="Cislo"
-                       asp-route-sortOrder="@GetNextOrder("Cislo")"
-                       asp-route-search="@currentSearch"
-                       style="text-decoration: none; color: inherit;">
-                        Číslo zásilky @GetSortIcon("Cislo")
-                    </a>
-                </th>
-                <th>
-                    <a asp-action="Select"
-                       asp-route-sortBy="Datum"
-                       asp-route-sortOrder="@GetNextOrder("Datum")"
-                       asp-route-search="@currentSearch"
-                       style="text-decoration: none; color: inherit;">
-                        Datum odeslání @GetSortIcon("Datum")
-                    </a>
-                </th>
-                <th>Odesílatel</th>
-                <th>Příjemce</th>
-                <th>Adresa doručení</th>
-                <th>
-                    <a asp-action="Select"
-                       asp-route-sortBy="Kuryr"
-                       asp-route-sortOrder="@GetNextOrder("Kuryr")"
-                       asp-route-search="@currentSearch"
-                       style="text-decoration: none; color: inherit;">
-                        Kurýr @GetSortIcon("Kuryr")
-                    </a>
-                </th>
-                <th>
-                    <a asp-action="Select"
-                       asp-route-sortBy="Stav"
-                       asp-route-sortOrder="@GetNextOrder("Stav")"
-                       asp-route-search="@currentSearch"
-                       style="text-decoration: none; color: inherit;">
-                        Stav @GetSortIcon("Stav")
-                    </a>
-                </th>
-                <th>Akce</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var zasilka in Model)
+            <!-- Tabulka zásilek -->
+            @if (Model != null && Model.Count > 0)
             {
-                var odesilatel = users?.ContainsKey(zasilka.OdesilatelId) == true ? users[zasilka.OdesilatelId] : null;
-                var prijemce = users?.ContainsKey(zasilka.PrijemceId) == true ? users[zasilka.PrijemceId] : null;
-                var kuryr = zasilka.KuryrId.HasValue && users?.ContainsKey(zasilka.KuryrId.Value) == true ? users[zasilka.KuryrId.Value] : null;
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>
+                                            <a asp-action="Select"
+                                               asp-route-sortBy="Id"
+                                               asp-route-sortOrder="@GetNextOrder("Id")"
+                                               asp-route-search="@currentSearch"
+                                               class="text-white text-decoration-none">
+                                                ID @GetSortIcon("Id")
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a asp-action="Select"
+                                               asp-route-sortBy="Cislo"
+                                               asp-route-sortOrder="@GetNextOrder("Cislo")"
+                                               asp-route-search="@currentSearch"
+                                               class="text-white text-decoration-none">
+                                                Číslo zásilky @GetSortIcon("Cislo")
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a asp-action="Select"
+                                               asp-route-sortBy="Datum"
+                                               asp-route-sortOrder="@GetNextOrder("Datum")"
+                                               asp-route-search="@currentSearch"
+                                               class="text-white text-decoration-none">
+                                                Datum odeslání @GetSortIcon("Datum")
+                                            </a>
+                                        </th>
+                                        <th>Odesílatel</th>
+                                        <th>Příjemce</th>
+                                        <th>Destinace</th>
+                                        <th>
+                                            <a asp-action="Select"
+                                               asp-route-sortBy="Kuryr"
+                                               asp-route-sortOrder="@GetNextOrder("Kuryr")"
+                                               asp-route-search="@currentSearch"
+                                               class="text-white text-decoration-none">
+                                                Kurýr @GetSortIcon("Kuryr")
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a asp-action="Select"
+                                               asp-route-sortBy="Stav"
+                                               asp-route-sortOrder="@GetNextOrder("Stav")"
+                                               asp-route-search="@currentSearch"
+                                               class="text-white text-decoration-none">
+                                                Stav @GetSortIcon("Stav")
+                                            </a>
+                                        </th>
+                                        <th class="text-center">Akce</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var zasilka in Model)
+                                    {
+                                        var odesilatel = users?.ContainsKey(zasilka.OdesilatelId) == true ? users[zasilka.OdesilatelId] : null;
+                                        var prijemce = users?.ContainsKey(zasilka.PrijemceId) == true ? users[zasilka.PrijemceId] : null;
+                                        var kuryr = zasilka.KuryrId.HasValue && users?.ContainsKey(zasilka.KuryrId.Value) == true ? users[zasilka.KuryrId.Value] : null;
 
-                <tr>
-                    <td>@zasilka.Id</td>
-                    <td>@zasilka.Cislo</td>
-                    <td>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>
-                        @if (odesilatel != null)
-                        {
-                            @($"{odesilatel.FirstName} {odesilatel.LastName} ({odesilatel.Email})")
-                        }
-                        else
-                        {
-                            <text>ID: @zasilka.OdesilatelId</text>
-                        }
-                    </td>
-                    <td>
-                        @if (prijemce != null)
-                        {
-                            @($"{prijemce.FirstName} {prijemce.LastName} ({prijemce.Email})")
-                        }
-                        else
-                        {
-                            <text>ID: @zasilka.PrijemceId</text>
-                        }
-                    </td>
-                    <td>
-                        @zasilka.DestinaceUlice @zasilka.DestinaceCP,
-                        @zasilka.DestinaceMesto, @zasilka.DestinacePsc
-                    </td>
-                    <td>
-                        @if (kuryr != null)
-                        {
-                            @($"{kuryr.FirstName} {kuryr.LastName}")
-                        }
-                        else if (zasilka.KuryrId.HasValue)
-                        {
-                            <text>ID: @zasilka.KuryrId</text>
-                        }
-                        else
-                        {
-                            <text>—</text>
-                        }
-                    </td>
-                    <td>@zasilka.Stav?.Stav</td>
-                    <td>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@zasilka.Id" onclick="return ConfirmDeletePackage();">Smazat</a>
-                            <a asp-action="Edit" class="btn btn-outline-warning" asp-route-id="@zasilka.Id">Upravit</a>
+                                        <tr>
+                                            <td class="align-middle"><strong>@zasilka.Id</strong></td>
+                                            <td class="align-middle">
+                                                <span class="badge bg-secondary">@zasilka.Cislo</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <small>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy")</small><br />
+                                                <small class="text-muted">@zasilka.DatumOdeslani.ToString("HH:mm")</small>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (odesilatel != null)
+                                                {
+                                                    <strong>@($"{odesilatel.FirstName} {odesilatel.LastName}")</strong>
+                                        
+                                                    <br />
+                                                    <small class="text-muted">@odesilatel.Email</small>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">ID: @zasilka.OdesilatelId</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (prijemce != null)
+                                                {
+                                                    <strong>@($"{prijemce.FirstName} {prijemce.LastName}")</strong>
+                                        
+                                                    <br />
+                                                    <small class="text-muted">@prijemce.Email</small>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">ID: @zasilka.PrijemceId</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                <small>
+                                                    @zasilka.DestinaceUlice @zasilka.DestinaceCP<br />
+                                                    @zasilka.DestinaceMesto, @zasilka.DestinacePsc
+                                                </small>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (kuryr != null)
+                                                {
+                                                    <span>@($"{kuryr.FirstName} {kuryr.LastName}")</span>
+                                                }
+                                                else if (zasilka.KuryrId.HasValue)
+                                                {
+                                                    <span class="text-muted">ID: @zasilka.KuryrId</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">—</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="Detail"
+                                                       asp-route-id="@zasilka.Id"
+                                                       class="btn btn-sm btn-info text-white"
+                                                       title="Detail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a asp-action="Edit"
+                                                       asp-route-id="@zasilka.Id"
+                                                       class="btn btn-sm btn-warning"
+                                                       title="Upravit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-action="Delete"
+                                                       asp-route-id="@zasilka.Id"
+                                                       class="btn btn-sm btn-danger"
+                                                       onclick="return ConfirmDeletePackage();"
+                                                       title="Smazat">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Žádné zásilky nebyly nalezeny.</p>
-}
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Žádné zásilky nebyly nalezeny.
+                </div>
+            }
 
-<div class="d-flex gap-2 justify-content-md-end mb-4">
-    <a asp-action="Create" class="btn btn-primary btn-lg">Vytvořit zásilku</a>
-    <a asp-action="Track" class="btn btn-secondary btn-lg">Vyhledat zásilku</a>
+            <!-- Akční tlačítka -->
+            <div class="d-flex gap-2 justify-content-end mt-4 mb-4">
+                <a asp-action="Track" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-search me-2"></i>Vyhledat zásilku
+                </a>
+                <a asp-action="Create" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Vytvořit zásilku
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts
