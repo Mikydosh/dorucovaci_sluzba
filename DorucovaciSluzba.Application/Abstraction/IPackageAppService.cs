@@ -5,6 +5,8 @@ namespace DorucovaciSluzba.Application.Abstraction
     public interface IPackageAppService
     {
         IList<Zasilka> Select();
+        // filtry
+        IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc", string? search = null);
         void Create(Zasilka zasilka);
         bool Delete(int zasilkaId);
 
@@ -16,8 +18,5 @@ namespace DorucovaciSluzba.Application.Abstraction
 
         IList<Zasilka> SelectForUser(int userId);
         IList<Zasilka> SelectForKuryr(int kuryrId);
-
-        // filtry
-        IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc");
     }
 }

@@ -118,11 +118,23 @@ namespace DorucovaciSluzba.Application.Implementation
         }
 
         // filtry
-        public IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc")
+        public IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc", string? search = null)
         {
             var query = _dbContext.Set<Zasilka>()
                 .Include(z => z.Stav)
                 .AsQueryable();
+
+            // Textové vyhledávání
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(z =>
+                    z.Cislo.ToLower().Contains(search) ||
+                    z.DestinaceUlice.ToLower().Contains(search) ||
+                    z.DestinaceMesto.ToLower().Contains(search) ||
+                    z.DestinacePsc.Contains(search)
+                );
+            }
 
             // Výchozí řazení podle Id
             if (string.IsNullOrEmpty(sortBy))

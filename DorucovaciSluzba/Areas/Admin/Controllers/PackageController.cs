@@ -34,9 +34,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
         [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
 
-        public async Task<IActionResult> Select(string? sortBy, string? sortOrder)
+        public async Task<IActionResult> Select(string? sortBy, string? sortOrder, string? search = null)
         {
-            IList<Zasilka> packages = _packageAppService.Select(sortBy, sortOrder ?? "asc");
+            IList<Zasilka> packages = _packageAppService.Select(sortBy, sortOrder ?? "asc", null);
 
             // NOVÉ: Načti všechny uživatele najednou (efektivnější než po jednom)
             var userIds = packages
@@ -55,11 +55,54 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 }
             }
 
+            // Filtrování podle search (včetně jmen uživatelů, emailů)
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+
+                packages = packages.Where(z =>
+                    // Číslo zásilky
+                    z.Cislo.ToLower().Contains(search) ||
+
+                    // Destinace
+                    z.DestinaceUlice.ToLower().Contains(search) ||
+                    z.DestinaceMesto.ToLower().Contains(search) ||
+                    z.DestinacePsc.Contains(search) ||
+                    z.DestinaceCP.ToLower().Contains(search) ||
+
+                    // Stav
+                    (z.Stav?.Stav != null && z.Stav.Stav.ToLower().Contains(search)) ||
+
+                    // Odesílatel
+                    (users.ContainsKey(z.OdesilatelId) && (
+                        (users[z.OdesilatelId].FirstName != null && users[z.OdesilatelId].FirstName.ToLower().Contains(search)) ||
+                        (users[z.OdesilatelId].LastName != null && users[z.OdesilatelId].LastName.ToLower().Contains(search)) ||
+                        (users[z.OdesilatelId].Email != null && users[z.OdesilatelId].Email.ToLower().Contains(search))
+                    )) ||
+
+                    // Příjemce
+                    (users.ContainsKey(z.PrijemceId) && (
+                        (users[z.PrijemceId].FirstName != null && users[z.PrijemceId].FirstName.ToLower().Contains(search)) ||
+                        (users[z.PrijemceId].LastName != null && users[z.PrijemceId].LastName.ToLower().Contains(search)) ||
+                        (users[z.PrijemceId].Email != null && users[z.PrijemceId].Email.ToLower().Contains(search))
+                    )) ||
+
+                    // Kurýr
+                    (z.KuryrId.HasValue && users.ContainsKey(z.KuryrId.Value) && (
+                        (users[z.KuryrId.Value].FirstName != null && users[z.KuryrId.Value].FirstName.ToLower().Contains(search)) ||
+                        (users[z.KuryrId.Value].LastName != null && users[z.KuryrId.Value].LastName.ToLower().Contains(search)) ||
+                        (users[z.KuryrId.Value].Email != null && users[z.KuryrId.Value].Email.ToLower().Contains(search))
+                    ))
+                ).ToList();
+            }
+
             // Předej uživatele do ViewBag
             ViewBag.Users = users;
             // informace o řazení do view
             ViewBag.CurrentSort = sortBy ?? "Id";
             ViewBag.CurrentOrder = sortOrder ?? "asc";
+            // search
+            ViewBag.CurrentSearch = search ?? "";
 
             return View(packages);
         }

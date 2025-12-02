@@ -3,9 +3,9 @@
     ViewData["Title"] = "Správa zásilek";
     var users = ViewBag.Users as Dictionary<int, DorucovaciSluzba.Infrastructure.Identity.User>;
 
-    // Helper pro řazení
     var currentSort = ViewBag.CurrentSort as string ?? "Id";
     var currentOrder = ViewBag.CurrentOrder as string ?? "asc";
+    var currentSearch = ViewBag.CurrentSearch as string ?? "";
 
     string GetSortIcon(string columnName)
     {
@@ -28,15 +28,56 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<!-- Vyhledávací formulář -->
+<div class="row mb-3 mt-3">
+    <div class="col-md-12">
+        <form asp-action="Select" method="get" class="d-flex gap-2">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Vyhledat zásilku..."
+                   value="@currentSearch" />
+
+            <!-- Zachování řazení při vyhledávání -->
+            <input type="hidden" name="sortBy" value="@currentSort" />
+            <input type="hidden" name="sortOrder" value="@currentOrder" />
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Hledat
+            </button>
+
+            @if (!string.IsNullOrEmpty(currentSearch))
+            {
+                <a asp-action="Select"
+                   asp-route-sortBy="@currentSort"
+                   asp-route-sortOrder="@currentOrder"
+                   class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Zrušit
+                </a>
+            }
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(currentSearch))
+{
+    <div class="alert alert-info">
+        Vyhledávání: <strong>@currentSearch</strong>
+        (@Model.Count výsledků)
+    </div>
+}
+
 @if (Model != null && Model.Count > 0)
 {
     <table class="table">
+        <!-- ... zbytek tabulky ... -->
         <thead>
             <tr>
                 <th>
                     <a asp-action="Select"
                        asp-route-sortBy="Id"
                        asp-route-sortOrder="@GetNextOrder("Id")"
+                       asp-route-search="@currentSearch"
                        style="text-decoration: none; color: inherit;">
                         ID @GetSortIcon("Id")
                     </a>
@@ -45,6 +86,7 @@
                     <a asp-action="Select"
                        asp-route-sortBy="Cislo"
                        asp-route-sortOrder="@GetNextOrder("Cislo")"
+                       asp-route-search="@currentSearch"
                        style="text-decoration: none; color: inherit;">
                         Číslo zásilky @GetSortIcon("Cislo")
                     </a>
@@ -53,6 +95,7 @@
                     <a asp-action="Select"
                        asp-route-sortBy="Datum"
                        asp-route-sortOrder="@GetNextOrder("Datum")"
+                       asp-route-search="@currentSearch"
                        style="text-decoration: none; color: inherit;">
                         Datum odeslání @GetSortIcon("Datum")
                     </a>
@@ -64,6 +107,7 @@
                     <a asp-action="Select"
                        asp-route-sortBy="Kuryr"
                        asp-route-sortOrder="@GetNextOrder("Kuryr")"
+                       asp-route-search="@currentSearch"
                        style="text-decoration: none; color: inherit;">
                         Kurýr @GetSortIcon("Kuryr")
                     </a>
@@ -72,6 +116,7 @@
                     <a asp-action="Select"
                        asp-route-sortBy="Stav"
                        asp-route-sortOrder="@GetNextOrder("Stav")"
+                       asp-route-search="@currentSearch"
                        style="text-decoration: none; color: inherit;">
                         Stav @GetSortIcon("Stav")
                     </a>
