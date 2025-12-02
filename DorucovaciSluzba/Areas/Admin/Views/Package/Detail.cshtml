@@ -1,5 +1,4 @@
 ﻿@model DorucovaciSluzba.Domain.Entities.Zasilka
-
 @{
     ViewData["Title"] = "Detail zásilky";
     var odesilatel = ViewBag.Odesilatel as DorucovaciSluzba.Infrastructure.Identity.User;
@@ -10,6 +9,7 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
+            <!-- HLAVNÍ KARTA S DETAILY ZÁSILKY -->
             <div class="card shadow mb-4">
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0 text-center">Zásilka číslo: @Model.Cislo</h3>
@@ -67,6 +67,74 @@
                         @if (!string.IsNullOrEmpty(kuryr.Telefon))
                         {
                             <p class="mb-1"><strong>Tel. číslo:</strong> @kuryr.Telefon</p>
+                        }
+                    }
+
+                    <hr />
+
+                    <!-- ✅ HISTORIE DORUČENÍ - UVNITŘ HLAVNÍ KARTY -->
+                    <h5 class="text-success mb-3">
+                        <i class="fas fa-history me-2"></i>Historie doručení
+                    </h5>
+
+                    @{
+                        var historie = ViewBag.Historie as IList<DorucovaciSluzba.Domain.Entities.PackageHistoryItem>;
+                        var vsechnyStavy = ViewBag.VsechnyStavy as IList<DorucovaciSluzba.Domain.Entities.StavZasilka>;
+                        var aktualniStavId = Model.StavId;
+
+                        if (vsechnyStavy != null && vsechnyStavy.Any())
+                        {
+                            // Vytvoř dictionary pro rychlé vyhledání historie
+                            var historieDict = historie?
+                            .GroupBy(h => h.StavId)
+                            .ToDictionary(g => g.Key, g => g.OrderByDescending(h => h.DatumZmeny).First())
+                            ?? new Dictionary<int, DorucovaciSluzba.Domain.Entities.PackageHistoryItem>();
+
+                            <div class="package-timeline">
+                                @for (int i = 0; i < vsechnyStavy.Count; i++)
+                                {
+                                    var stav = vsechnyStavy[i];
+                                    var historyItem = historieDict.ContainsKey(stav.Id) ? historieDict[stav.Id] : null;
+
+                                    // Určení typu položky
+                                    bool isCompleted = historyItem != null && stav.Id != aktualniStavId;
+                                    bool isCurrent = stav.Id == aktualniStavId;
+                                    bool isFuture = historyItem == null && !isCurrent;
+
+                                    // Reklamováno POUZE když je AKTUÁLNÍ
+                                    bool isReclaimed = stav.Stav.Contains("Reklamováno") && isCurrent;
+
+                                    // Pokud je "Reklamováno" v historii, ale NENÍ aktuální → zobraz jako completed (šedý)
+                                    var cssClass = isReclaimed ? "reclaimed" : (isCurrent ? "current" : (isCompleted ? "completed" : "future"));
+
+                                    <div class="timeline-item @cssClass">
+                                        <div class="timeline-badge @cssClass"></div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-title">
+                                                @stav.Stav
+                                            </div>
+                                            <div class="timeline-date">
+                                                @if (historyItem != null)
+                                                {
+                                                    <i class="far fa-clock me-1"></i>
+                                                    @historyItem.DatumZmeny.ToString("dd.MM.yyyy HH:mm")
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">---</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Zatím nebyla zaznamenána žádná změna stavu.
+                            </div>
                         }
                     }
                 </div>

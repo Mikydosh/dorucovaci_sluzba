@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -28,4 +28,108 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* ============================================
+   PACKAGE HISTORY TIMELINE (MINIMALISTICKÝ)
+   ============================================ */
+
+.package-timeline {
+    position: relative;
+    padding: 10px 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 40px;
+    padding-bottom: 25px;
+}
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    /* Svislá čára - VŠECHNY ŠEDÉ */
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 9px;
+        top: 20px;
+        bottom: -5px;
+        width: 2px;
+        background-color: #dee2e6;
+    }
+
+    .timeline-item:last-child::before {
+        display: none;
+    }
+
+/* Bublina (kruh) - BEZ IKON, BEZ OHRANIČENÍ */
+.timeline-badge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+    /* Dokončené stavy - světle zelená */
+    .timeline-badge.completed {
+        background-color: #d4edda;
+    }
+
+    /* Aktuální stav - výrazná zelená */
+    .timeline-badge.current {
+        background-color: #28a745;
+    }
+
+    /* Nedosažené stavy - šedá */
+    .timeline-badge.future {
+        background-color: #e9ecef;
+    }
+
+    /* Reklamováno - oranžová */
+    .timeline-badge.reclaimed {
+        background-color: #ff6b35;
+    }
+
+/* Obsah - BEZ KARTY, jenom text */
+.timeline-content {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.timeline-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #212529;
+}
+
+/* Proběhlé stavy - světle zelený nadpis */
+.timeline-item.completed .timeline-title {
+    color:#6c757d ;
+}
+
+/*  Aktuální stav - výrazně zelený nadpis */
+.timeline-item.current .timeline-title {
+    color: #28a745;
+}
+
+/* Reklamováno - oranžový nadpis */
+.timeline-item.reclaimed .timeline-title {
+    color: #ff6b35;
+}
+
+/* Nedosažené stavy - šedý nadpis */
+.timeline-item.future .timeline-title {
+    color: #6c757d;
+}
+
+.timeline-date {
+    font-size: 13px;
+    color: #6c757d;
 }

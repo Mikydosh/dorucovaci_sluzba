@@ -15,11 +15,16 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
     {
         IPackageAppService _packageAppService;
         UserManager<User> _userManager;
+        private readonly IPackageHistoryAppService _packageHistoryAppService;
 
-        public PackageController(IPackageAppService packageAppService, UserManager<User> userManager)
+        public PackageController(
+            IPackageAppService packageAppService, 
+            UserManager<User> userManager,
+            IPackageHistoryAppService packageHistoryAppService)
         {
             _packageAppService = packageAppService;
             _userManager = userManager;
+            _packageHistoryAppService = packageHistoryAppService;
         }
 
         // ========================================
@@ -56,14 +61,14 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        [AllowAnonymous]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        [AllowAnonymous]
         public async Task<IActionResult> Create(CreateZasilkaViewModel model)
         {
             // Validace modelu
@@ -108,6 +113,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 };
 
                 _packageAppService.Create(zasilka);
+
+                // Zaloguj vytvoření zásilky (první stav)
+                _packageHistoryAppService.Create(zasilka.Id, zasilka.StavId);
 
                 return RedirectToAction(nameof(PackageController.Select));
             }
@@ -182,6 +190,10 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
             try
             {
+                // Načti starý stav před aktualizací
+                var oldZasilka = _packageAppService.GetById(model.Id);
+                int? oldStavId = oldZasilka?.StavId;
+
                 var zasilka = new Zasilka
                 {
                     Id = model.Id,
@@ -190,6 +202,19 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 };
 
                 _packageAppService.Update(zasilka);
+
+                // Zaloguj změnu POUZE pokud se stav změnil
+                if (oldStavId.HasValue && oldStavId.Value != model.StavId)
+                {
+                    // Zkontroluj, jestli tento stav už není v historii
+                    var existujiciHistorie = _packageHistoryAppService.GetHistoryForPackage(model.Id);
+                    bool stavUzExistuje = existujiciHistorie.Any(h => h.StavId == model.StavId);
+
+                    if (!stavUzExistuje)
+                    {
+                        _packageHistoryAppService.Create(model.Id, model.StavId);
+                    }
+                }
 
                 TempData["SuccessMessage"] = $"Zásilka byla úspěšně aktualizována!";
 
@@ -331,10 +356,26 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 kuryr = await _userManager.FindByIdAsync(zasilka.KuryrId.Value.ToString());
             }
 
+            // Načti historii zásilky
+            var historie = _packageHistoryAppService.GetHistoryForPackage(id);
+
+            // Načti všechny možné stavy
+            var vsechnyStavy = _packageAppService.GetAllStates().OrderBy(s => s.Id).ToList();
+            var historieStavIds = historie.Select(h => h.StavId).ToHashSet();
+
+            // Filtruj stavy - zahrnuj jen ty, které:
+            // 1. Jsou v historii NEBO
+            // 2. Nemají název "Reklamováno"
+            vsechnyStavy = vsechnyStavy
+                .Where(s => historieStavIds.Contains(s.Id) || !s.Stav.Contains("Reklamováno"))
+                .ToList();
+
             // Předej do ViewBag
             ViewBag.Odesilatel = odesilatel;
             ViewBag.Prijemce = prijemce;
             ViewBag.Kuryr = kuryr;
+            ViewBag.Historie = historie;
+            ViewBag.VsechnyStavy = vsechnyStavy;
 
             return View(zasilka);
         }

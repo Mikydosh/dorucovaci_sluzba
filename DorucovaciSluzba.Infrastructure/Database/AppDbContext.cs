@@ -12,6 +12,7 @@ namespace DorucovaciSluzba.Infrastructure.Database
     {
         public DbSet<Zasilka> Zasilky { get; set; }
         public DbSet<StavZasilka> StavyZasilek { get; set; }
+        public DbSet<PackageHistoryItem> PackageHistoryItems { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {

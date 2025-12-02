@@ -60,6 +60,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IPackageAppService, PackageAppService>();
 builder.Services.AddScoped<IAccountService, AccountIdentityService>();
 builder.Services.AddScoped<ISecurityService, SecurityIdentityService>();
+builder.Services.AddScoped<IPackageHistoryAppService, PackageHistoryAppService>();
 
 
 var app = builder.Build();
