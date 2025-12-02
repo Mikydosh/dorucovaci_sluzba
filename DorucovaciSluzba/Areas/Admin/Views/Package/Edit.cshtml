@@ -12,6 +12,7 @@
 
             <form asp-action="Edit" method="post" class="needs-validation" novalidate>
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                 <div class="row">
@@ -77,43 +78,56 @@
                             </div>
                         </div>
                         <!-- KURÝR (editovatelný) -->
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-light text-dark">
-                                <h4 class="mb-0 text-center">Přiřazení kurýra</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label asp-for="KuryrId" class="form-label fw-bold"></label>
-                                    <select asp-for="KuryrId" class="form-select">
-                                        <option value="">-- Nepřiřazen --</option>
-                                        @foreach (var kuryr in Model.DostupniKuryri ?? new List<DorucovaciSluzba.Infrastructure.Identity.User>())
-                                        {
-                                            <option value="@kuryr.Id">
-                                                @kuryr.FirstName @kuryr.LastName
-                                            </option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="KuryrId" class="text-danger small"></span>
-                                    <div class="form-text">
-                                        Vyberte kurýra, který má zásilku doručit.
+                        @if (User.IsInRole("Admin") || User.IsInRole("Podpora"))
+                        {
+                            <!-- KURÝR (editovatelný) -->
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-light text-dark">
+                                    <h4 class="mb-0 text-center">Přiřazení kurýra</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label asp-for="KuryrId" class="form-label fw-bold"></label>
+                                        <select asp-for="KuryrId" class="form-select">
+                                            <option value="">-- Nepřiřazen --</option>
+                                            @foreach (var kuryr in Model.DostupniKuryri ?? new List<DorucovaciSluzba.Infrastructure.Identity.User>())
+                                            {
+                                                <option value="@kuryr.Id">
+                                                    @kuryr.FirstName @kuryr.LastName
+                                                </option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="KuryrId" class="text-danger small"></span>
+                                        <div class="form-text">
+                                            Vyberte kurýra, který má zásilku doručit.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+
+                </div>
+
+
+
+                    <!-- TLAČÍTKA -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                        @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl as string))
+                        {
+                            <a href="@ViewBag.ReturnUrl" class="btn btn-secondary btn-lg">
+                                Zrušit
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Select" class="btn btn-secondary btn-lg">
+                                Zrušit
+                            </a>
+                        }
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Uložit změny
+                        </button>
                     </div>
-                </div>
-
-
-
-                <!-- TLAČÍTKA -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-                    <a asp-action="Select" class="btn btn-secondary btn-lg">
-                        Zrušit
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        Uložit změny
-                    </button>
-                </div>
             </form>
 
         </div>

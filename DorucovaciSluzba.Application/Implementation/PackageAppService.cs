@@ -87,7 +87,11 @@ namespace DorucovaciSluzba.Application.Implementation
             }
 
             existujiciZasilka.StavId = zasilka.StavId;
-            existujiciZasilka.KuryrId = zasilka.KuryrId;
+            
+            if (zasilka.KuryrId.HasValue)
+            {
+                existujiciZasilka.KuryrId = zasilka.KuryrId;
+            }
 
             _dbContext.SaveChanges();
         }

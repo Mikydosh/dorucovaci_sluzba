@@ -8,18 +8,62 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">
+            <h2 class="mb-4 text-center">
                 <i class="fas fa-truck me-2"></i>Moje doručení
             </h2>
 
             @if (!Model.Any())
             {
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>Momentálně nemáte přiřazené žádné zásilky k doručení.
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fas fa-info-circle me-3 fs-4"></i>
+                    <div>
+                        <strong>Žádné zásilky k doručení</strong>
+                        <p class="mb-0 mt-1">Momentálně nemáte přiřazené žádné zásilky k doručení.</p>
+                    </div>
                 </div>
             }
             else
             {
+                <!-- Statistiky -->
+                <div class="row mb-4">
+                    @{
+                        var celkemZasilek = Model.Count;
+                        var aktivniZasilky = Model.Count(z => z.StavId != 3 && z.StavId != 4); // Není Doručeno ani Reklamováno
+                        var dorucenych = Model.Count(z => z.StavId == 3); // Doručeno
+                    }
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-primary shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title mb-2">Celkem zásilek</h5>
+                                <p class="fs-1 fw-bold mb-0 text-primary">@celkemZasilek</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-warning shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-shipping-fast fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title mb-2">Aktivní doručení</h5>
+                                <p class="fs-1 fw-bold mb-0 text-warning">@aktivniZasilky</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-success shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                <h5 class="card-title mb-2">Doručeno</h5>
+                                <p class="fs-1 fw-bold mb-0 text-success">@dorucenych</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabulka zásilek -->
                 <div class="card shadow-sm">
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -32,7 +76,7 @@
                                         <th>Odesílatel</th>
                                         <th>Příjemce</th>
                                         <th>Destinace</th>
-                                        <th>Akce</th>
+                                        <th class="text-center">Akce</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,33 +86,77 @@
                                         var prijemce = await UserManager.FindByIdAsync(zasilka.PrijemceId.ToString());
 
                                         <tr>
-                                            <td><strong>@zasilka.Cislo</strong></td>
-                                            <td>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</td>
-                                            <td>
-                                                <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                            <td class="align-middle">
+                                                <span class="badge bg-secondary">@zasilka.Cislo</span>
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
+                                                <small>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy")</small><br />
+                                                <small class="text-muted">@zasilka.DatumOdeslani.ToString("HH:mm")</small>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (zasilka.StavId == 2)
+                                                {
+                                                    <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 3)
+                                                {
+                                                    <span class="badge bg-success">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 4)
+                                                {
+                                                    <span class="badge bg-danger">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">@zasilka.Stav?.Stav</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
                                                 <strong>@odesilatel?.FirstName @odesilatel?.LastName</strong><br />
-                                                <small class="text-muted">@odesilatel?.Email</small>
-                                            </td>
-                                            <td>
-                                                <strong>@prijemce?.FirstName @prijemce?.LastName</strong><br />
-                                                <small class="text-muted">@prijemce?.Email</small>
-                                            </td>
-                                            <td>
-                                                <small>
-                                                    @zasilka.DestinaceUlice @zasilka.DestinaceCP<br />
-                                                    @zasilka.DestinacePsc @zasilka.DestinaceMesto
+                                                <small class="text-muted">
+                                                    <i class="fas fa-envelope me-1"></i>@odesilatel?.Email
                                                 </small>
                                             </td>
-                                            <td>
-                                                <a asp-area="Admin"
-                                                   asp-controller="Package"
-                                                   asp-action="Detail"
-                                                   asp-route-id="@zasilka.Id"
-                                                   class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> Detail
-                                                </a>
+                                            <td class="align-middle">
+                                                <strong>@prijemce?.FirstName @prijemce?.LastName</strong><br />
+                                                <small class="text-muted">
+                                                    <i class="fas fa-envelope me-1"></i>@prijemce?.Email
+                                                </small>
+                                                @if (!string.IsNullOrEmpty(prijemce?.Telefon))
+                                                {
+                                                    <br />
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-phone me-1"></i>@prijemce.Telefon
+                                                    </small>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                <small>
+                                                    <i class="fas fa-map-marker-alt me-1 text-danger"></i>
+                                                    @zasilka.DestinaceUlice @zasilka.DestinaceCP<br />
+                                                    <span class="ms-3">@zasilka.DestinaceMesto, @zasilka.DestinacePsc</span>
+                                                </small>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-area="Admin"
+                                                       asp-controller="Package"
+                                                       asp-action="Detail"
+                                                       asp-route-id="@zasilka.Id"
+                                                       class="btn btn-sm btn-info"
+                                                       title="Zobrazit detail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a asp-area="Admin"
+                                                       asp-controller="Package"
+                                                       asp-action="Edit"
+                                                       asp-route-id="@zasilka.Id"
+                                                       asp-route-returnUrl="@Url.Action("Index", "MyDeliveries", new { area = "Delivery" })"
+                                                       class="btn btn-sm btn-warning"
+                                                       title="Změnit stav">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     }

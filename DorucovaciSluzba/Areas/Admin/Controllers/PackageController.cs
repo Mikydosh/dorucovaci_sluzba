@@ -190,8 +190,8 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
-        public async Task<IActionResult> Edit(int id)
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
+        public async Task<IActionResult> Edit(int id, string? returnUrl = null)
         {
             var zasilka = _packageAppService.GetById(id);
 
@@ -220,13 +220,15 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 DostupniKuryri = (await _userManager.GetUsersInRoleAsync("Kuryr")).ToList()
             };
 
+            ViewBag.ReturnUrl = returnUrl;
+
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
-        public IActionResult Edit(EditUserViewModel model)
+        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
+        public IActionResult Edit(EditUserViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -265,6 +267,12 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
                 TempData["SuccessMessage"] = $"Zásilka byla úspěšně aktualizována!";
 
+                // Použij returnUrl nebo defaultní Select
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
                 return RedirectToAction("Select");
             }
             catch (Exception ex)
@@ -272,6 +280,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 ModelState.AddModelError("", $"Chyba při aktualizaci: {ex.Message}");
                 model.DostupneStavy = _packageAppService.GetAllStates().ToList();
                 model.DostupniKuryri = _userManager.GetUsersInRoleAsync("Kuryr").Result.ToList();
+                ViewBag.ReturnUrl = returnUrl;
                 return View(model);
             }
         }
