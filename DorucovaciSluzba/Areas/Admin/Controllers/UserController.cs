@@ -21,11 +21,11 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         }
 
         // Výpis všech uživatelů
-        public async Task<IActionResult> Select()
+        public async Task<IActionResult> Select(string? sortBy = null, string? sortOrder = null, string? search = null)
         {
             var users = _userManager.Users.ToList();
 
-            // Pro každého uživatele načti jeho role
+            // Pro každého uživatele načti jeho role (PŘED filtrováním)
             var userRoles = new Dictionary<int, IList<string>>();
             foreach (var user in users)
             {
@@ -33,7 +33,54 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 userRoles[user.Id] = roles;
             }
 
+            // Vyhledávání
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                users = users.Where(u =>
+                    (u.FirstName != null && u.FirstName.ToLower().Contains(search)) ||
+                    (u.LastName != null && u.LastName.ToLower().Contains(search)) ||
+                    (u.Email != null && u.Email.ToLower().Contains(search)) ||
+                    (u.UserName != null && u.UserName.ToLower().Contains(search)) ||
+                    (u.Telefon != null && u.Telefon.Contains(search)) ||
+                    (u.Mesto != null && u.Mesto.ToLower().Contains(search)) ||
+                    (u.Ulice != null && u.Ulice.ToLower().Contains(search)) ||
+                    (u.Psc != null && u.Psc.Contains(search)) ||
+                    // ✅ PŘIDÁNO: Hledání v rolích
+                    (userRoles.ContainsKey(u.Id) && userRoles[u.Id].Any(r => r.ToLower().Contains(search)))
+                ).ToList();
+            }
+
+            // Řazení
+            sortBy = sortBy?.ToLower() ?? "id";
+            users = (sortBy, sortOrder?.ToLower()) switch
+            {
+                ("id", "desc") => users.OrderByDescending(u => u.Id).ToList(),
+                ("id", _) => users.OrderBy(u => u.Id).ToList(),
+
+                ("jmeno", "desc") => users.OrderByDescending(u => u.FirstName).ToList(),
+                ("jmeno", _) => users.OrderBy(u => u.FirstName).ToList(),
+
+                ("prijmeni", "desc") => users.OrderByDescending(u => u.LastName).ToList(),
+                ("prijmeni", _) => users.OrderBy(u => u.LastName).ToList(),
+
+                ("email", "desc") => users.OrderByDescending(u => u.Email).ToList(),
+                ("email", _) => users.OrderBy(u => u.Email).ToList(),
+
+                // Řazení podle role (první role v seznamu)
+                ("role", "desc") => users.OrderByDescending(u =>
+                    userRoles.ContainsKey(u.Id) && userRoles[u.Id].Any() ? userRoles[u.Id].First() : "").ToList(),
+                ("role", _) => users.OrderBy(u =>
+                    userRoles.ContainsKey(u.Id) && userRoles[u.Id].Any() ? userRoles[u.Id].First() : "").ToList(),
+
+                _ => users.OrderBy(u => u.Id).ToList()
+            };
+
             ViewBag.UserRoles = userRoles;
+            ViewBag.CurrentSort = sortBy;
+            ViewBag.CurrentOrder = sortOrder ?? "asc";
+            ViewBag.CurrentSearch = search ?? "";
+
             return View(users);
         }
 

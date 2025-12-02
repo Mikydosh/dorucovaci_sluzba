@@ -1,25 +1,125 @@
 ﻿@model IList<DorucovaciSluzba.Infrastructure.Identity.User>
-
 @{
     ViewData["Title"] = "Správa uživatelů";
     var userRoles = ViewBag.UserRoles as Dictionary<int, IList<string>>;
+
+    var currentSort = ViewBag.CurrentSort as string ?? "id";
+    var currentOrder = ViewBag.CurrentOrder as string ?? "asc";
+    var currentSearch = ViewBag.CurrentSearch as string ?? "";
+
+    string GetSortIcon(string columnName)
+    {
+        if (currentSort.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+        {
+            return currentOrder == "asc" ? "↑" : "↓";
+        }
+        return "";
+    }
+
+    string GetNextOrder(string columnName)
+    {
+        if (currentSort.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+        {
+            return currentOrder == "asc" ? "desc" : "asc";
+        }
+        return "asc";
+    }
 }
 
 <h1>@ViewData["Title"]</h1>
+
+<!-- Vyhledávací formulář -->
+<div class="row mb-3 mt-3">
+    <div class="col-md-12">
+        <form asp-action="Select" method="get" class="d-flex gap-2">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Vyhledat uživatele..."
+                   value="@currentSearch" />
+
+            <!-- Zachování řazení při vyhledávání -->
+            <input type="hidden" name="sortBy" value="@currentSort" />
+            <input type="hidden" name="sortOrder" value="@currentOrder" />
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Hledat
+            </button>
+
+            @if (!string.IsNullOrEmpty(currentSearch))
+            {
+                <a asp-action="Select"
+                   asp-route-sortBy="@currentSort"
+                   asp-route-sortOrder="@currentOrder"
+                   class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Zrušit
+                </a>
+            }
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(currentSearch))
+{
+    <div class="alert alert-info">
+        Vyhledávání: <strong>@currentSearch</strong>
+        (@Model.Count výsledků)
+    </div>
+}
 
 @if (Model != null && Model.Count > 0)
 {
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Jméno</th>
-                <th>Příjmení</th>
-                <th>E-mail</th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Id"
+                       asp-route-sortOrder="@GetNextOrder("Id")"
+                       asp-route-search="@currentSearch"
+                       style="text-decoration: none; color: inherit;">
+                        ID @GetSortIcon("Id")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Jmeno"
+                       asp-route-sortOrder="@GetNextOrder("Jmeno")"
+                       asp-route-search="@currentSearch"
+                       style="text-decoration: none; color: inherit;">
+                        Jméno @GetSortIcon("Jmeno")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Prijmeni"
+                       asp-route-sortOrder="@GetNextOrder("Prijmeni")"
+                       asp-route-search="@currentSearch"
+                       style="text-decoration: none; color: inherit;">
+                        Příjmení @GetSortIcon("Prijmeni")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Email"
+                       asp-route-sortOrder="@GetNextOrder("Email")"
+                       asp-route-search="@currentSearch"
+                       style="text-decoration: none; color: inherit;">
+                        E-mail @GetSortIcon("Email")
+                    </a>
+                </th>
                 <th>Username</th>
                 <th>Telefon</th>
                 <th>Adresa</th>
-                <th>Role</th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Role"
+                       asp-route-sortOrder="@GetNextOrder("Role")"
+                       asp-route-search="@currentSearch"
+                       style="text-decoration: none; color: inherit;">
+                        Role @GetSortIcon("Role")
+                    </a>
+                </th>
                 <th>Akce</th>
             </tr>
         </thead>
