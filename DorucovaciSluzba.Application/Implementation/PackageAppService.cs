@@ -17,6 +17,7 @@ namespace DorucovaciSluzba.Application.Implementation
         {
             return _dbContext.Set<Zasilka>()
                     .Include(z => z.Stav)
+                    .OrderBy(z => z.Id)
                     .ToList();
         }
 
