@@ -16,5 +16,8 @@ namespace DorucovaciSluzba.Application.Abstraction
 
         IList<Zasilka> SelectForUser(int userId);
         IList<Zasilka> SelectForKuryr(int kuryrId);
+
+        // filtry
+        IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc");
     }
 }

@@ -116,5 +116,47 @@ namespace DorucovaciSluzba.Application.Implementation
                 .OrderByDescending(z => z.DatumOdeslani)
                 .ToList();
         }
+
+        // filtry
+        public IList<Zasilka> Select(string? sortBy = null, string? sortOrder = "asc")
+        {
+            var query = _dbContext.Set<Zasilka>()
+                .Include(z => z.Stav)
+                .AsQueryable();
+
+            // Výchozí řazení podle Id
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                sortBy = "Id";
+            }
+
+            // Aplikuj řazení podle sloupce
+            query = sortBy.ToLower() switch
+            {
+                "id" => sortOrder == "desc"
+                    ? query.OrderByDescending(z => z.Id)
+                    : query.OrderBy(z => z.Id),
+
+                "cislo" => sortOrder == "desc"
+                    ? query.OrderByDescending(z => z.Cislo)
+                    : query.OrderBy(z => z.Cislo),
+
+                "datum" => sortOrder == "desc"
+                    ? query.OrderByDescending(z => z.DatumOdeslani)
+                    : query.OrderBy(z => z.DatumOdeslani),
+
+                "kuryr" => sortOrder == "desc"
+                    ? query.OrderByDescending(z => z.KuryrId)
+                    : query.OrderBy(z => z.KuryrId),
+
+                "stav" => sortOrder == "desc"
+                    ? query.OrderByDescending(z => z.Stav!.Stav)
+                    : query.OrderBy(z => z.Stav!.Stav),
+
+                _ => query.OrderBy(z => z.Id) // Výchozí
+            };
+
+            return query.ToList();
+        }
     }
 }

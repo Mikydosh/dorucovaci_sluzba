@@ -1,8 +1,29 @@
 ﻿@model IList<Zasilka>
-
 @{
     ViewData["Title"] = "Správa zásilek";
     var users = ViewBag.Users as Dictionary<int, DorucovaciSluzba.Infrastructure.Identity.User>;
+
+    // Helper pro řazení
+    var currentSort = ViewBag.CurrentSort as string ?? "Id";
+    var currentOrder = ViewBag.CurrentOrder as string ?? "asc";
+
+    string GetSortIcon(string columnName)
+    {
+        if (currentSort.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+        {
+            return currentOrder == "asc" ? "↑" : "↓";
+        }
+        return "";
+    }
+
+    string GetNextOrder(string columnName)
+    {
+        if (currentSort.Equals(columnName, StringComparison.OrdinalIgnoreCase))
+        {
+            return currentOrder == "asc" ? "desc" : "asc";
+        }
+        return "asc";
+    }
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -12,14 +33,49 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Číslo zásilky</th>
-                <th>Datum odeslání</th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Id"
+                       asp-route-sortOrder="@GetNextOrder("Id")"
+                       style="text-decoration: none; color: inherit;">
+                        ID @GetSortIcon("Id")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Cislo"
+                       asp-route-sortOrder="@GetNextOrder("Cislo")"
+                       style="text-decoration: none; color: inherit;">
+                        Číslo zásilky @GetSortIcon("Cislo")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Datum"
+                       asp-route-sortOrder="@GetNextOrder("Datum")"
+                       style="text-decoration: none; color: inherit;">
+                        Datum odeslání @GetSortIcon("Datum")
+                    </a>
+                </th>
                 <th>Odesílatel</th>
                 <th>Příjemce</th>
                 <th>Adresa doručení</th>
-                <th>Kurýr</th>
-                <th>Stav</th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Kuryr"
+                       asp-route-sortOrder="@GetNextOrder("Kuryr")"
+                       style="text-decoration: none; color: inherit;">
+                        Kurýr @GetSortIcon("Kuryr")
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Select"
+                       asp-route-sortBy="Stav"
+                       asp-route-sortOrder="@GetNextOrder("Stav")"
+                       style="text-decoration: none; color: inherit;">
+                        Stav @GetSortIcon("Stav")
+                    </a>
+                </th>
                 <th>Akce</th>
             </tr>
         </thead>

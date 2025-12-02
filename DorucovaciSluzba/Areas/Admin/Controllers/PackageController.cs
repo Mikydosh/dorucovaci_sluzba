@@ -1,12 +1,13 @@
 ﻿using DorucovaciSluzba.Application.Abstraction;
 using DorucovaciSluzba.Domain.Entities;
 using DorucovaciSluzba.Domain.Enums;
+using DorucovaciSluzba.Extensions;
 using DorucovaciSluzba.Infrastructure.Identity;
 using DorucovaciSluzba.Models.Package;
-using DorucovaciSluzba.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace DorucovaciSluzba.Areas.Admin.Controllers
 {
@@ -33,9 +34,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
         [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
 
-        public async Task<IActionResult> Select()
+        public async Task<IActionResult> Select(string? sortBy, string? sortOrder)
         {
-            IList<Zasilka> packages = _packageAppService.Select();
+            IList<Zasilka> packages = _packageAppService.Select(sortBy, sortOrder ?? "asc");
 
             // NOVÉ: Načti všechny uživatele najednou (efektivnější než po jednom)
             var userIds = packages
@@ -56,6 +57,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
             // Předej uživatele do ViewBag
             ViewBag.Users = users;
+            // informace o řazení do view
+            ViewBag.CurrentSort = sortBy ?? "Id";
+            ViewBag.CurrentOrder = sortOrder ?? "asc";
 
             return View(packages);
         }
