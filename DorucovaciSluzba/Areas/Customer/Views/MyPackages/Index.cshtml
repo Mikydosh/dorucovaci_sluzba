@@ -14,14 +14,48 @@
 
             @if (!Model.Any())
             {
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>Nemáte žádné zásilky.
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fas fa-info-circle me-3 fs-4"></i>
+                    <div>
+                        <strong>Nemáte žádné zásilky</strong>
+                        <p class="mb-0 mt-1">Zatím jste neodeslali ani nepřijali žádnou zásilku.</p>
+                    </div>
                 </div>
             }
             else
             {
+                <!-- Statistiky -->
+                <div class="row mb-4">
+                    @{
+                        var currentUserId = int.Parse(UserManager.GetUserId(User));
+                        var odeslane = Model.Count(z => z.OdesilatelId == currentUserId);
+                        var prijate = Model.Count(z => z.PrijemceId == currentUserId);
+                    }
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-success shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-arrow-up fa-3x text-success mb-3"></i>
+                                <h5 class="card-title mb-2">Odeslané zásilky</h5>
+                                <p class="fs-1 fw-bold mb-0 text-success">@odeslane</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-info shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-arrow-down fa-3x text-info mb-3"></i>
+                                <h5 class="card-title mb-2">Přijaté zásilky</h5>
+                                <p class="fs-1 fw-bold mb-0 text-info">@prijate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabulka zásilek -->
                 <div class="card shadow-sm">
-                    <div class="card-body p-0">
+                    <div class="card-body p-0 text-center">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover mb-0">
                                 <thead class="table-dark">
@@ -31,7 +65,7 @@
                                         <th>Stav</th>
                                         <th>Destinace</th>
                                         <th>Typ</th>
-                                        <th>Akce</th>
+                                        <th class="text-center">Akce</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -39,48 +73,58 @@
                                     {
                                         var odesilatel = await UserManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
                                         var prijemce = await UserManager.FindByIdAsync(zasilka.PrijemceId.ToString());
-                                        var currentUserId = int.Parse(UserManager.GetUserId(User));
+                                        var currentUserIdLoop = int.Parse(UserManager.GetUserId(User));
 
-                                        var typ = zasilka.OdesilatelId == currentUserId ? "Odeslaná" : "Přijatá";
-                                        var druhyUzivatel = zasilka.OdesilatelId == currentUserId ? prijemce : odesilatel;
+                                        var typ = zasilka.OdesilatelId == currentUserIdLoop ? "Odeslaná" : "Přijatá";
+                                        var druhyUzivatel = zasilka.OdesilatelId == currentUserIdLoop ? prijemce : odesilatel;
 
                                         <tr>
-                                            <td><strong>@zasilka.Cislo</strong></td>
-                                            <td>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</td>
-                                            <td>
+                                            <td class="align-middle">
+                                                <span class="badge bg-secondary">@zasilka.Cislo</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <small>@zasilka.DatumOdeslani.ToString("dd.MM.yyyy")</small><br />
+                                                <small class="text-muted">@zasilka.DatumOdeslani.ToString("HH:mm")</small>
+                                            </td>
+                                            <td class="align-middle">
                                                 <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 <small>
                                                     @zasilka.DestinaceUlice @zasilka.DestinaceCP<br />
-                                                    @zasilka.DestinacePsc @zasilka.DestinaceMesto
+                                                    @zasilka.DestinaceMesto, @zasilka.DestinacePsc
                                                 </small>
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 @if (typ == "Odeslaná")
                                                 {
-                                                    <span class="badge bg-success">
-                                                        <i class="fas fa-arrow-up"></i> Odeslaná
+                                                    <span class="badge bg-success mb-1">
+                                                        <i class="fas fa-arrow-up me-1"></i>Odeslaná
                                                     </span>
                                                     <br />
-                                                    <small class="text-muted">Pro: @druhyUzivatel?.FirstName @druhyUzivatel?.LastName</small>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-user me-1"></i>@druhyUzivatel?.FirstName @druhyUzivatel?.LastName
+                                                    </small>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-info">
-                                                        <i class="fas fa-arrow-down"></i> Přijatá
+                                                    <span class="badge bg-info mb-1">
+                                                        <i class="fas fa-arrow-down me-1"></i>Přijatá
                                                     </span>
                                                     <br />
-                                                    <small class="text-muted">Od: @druhyUzivatel?.FirstName @druhyUzivatel?.LastName</small>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-user me-1"></i>@druhyUzivatel?.FirstName @druhyUzivatel?.LastName
+                                                    </small>
                                                 }
                                             </td>
-                                            <td>
+                                            <td class="align-middle text-center">
                                                 <a asp-area="Admin"
                                                    asp-controller="Package"
                                                    asp-action="Detail"
                                                    asp-route-id="@zasilka.Id"
-                                                   class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> Detail
+                                                   class="btn btn-sm btn-info"
+                                                   title="Zobrazit detail">
+                                                    <i class="fas fa-eye text-white"></i>
                                                 </a>
                                             </td>
                                         </tr>
