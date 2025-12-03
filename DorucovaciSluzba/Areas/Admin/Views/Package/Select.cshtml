@@ -203,7 +203,22 @@
                                                 }
                                             </td>
                                             <td class="align-middle">
-                                                <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                                @if (zasilka.StavId == 2)
+                                                {
+                                                    <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 3)
+                                                {
+                                                    <span class="badge bg-success">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 4)
+                                                {
+                                                    <span class="badge bg-danger">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">@zasilka.Stav?.Stav</span>
+                                                }
                                             </td>
                                             <td class="align-middle text-center">
                                                 <div class="btn-group" role="group">
