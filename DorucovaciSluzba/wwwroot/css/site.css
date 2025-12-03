@@ -133,3 +133,39 @@ body {
     font-size: 13px;
     color: #6c757d;
 }
+
+/* ============================================
+   HOME PAGE - Hover efekt pro karty
+   ============================================ */
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+    .hover-lift:hover {
+        transform: translateY(-10px) !important;
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3) !important;
+    }
+
+/* ============================================
+   STICKY FOOTER - vždy na dně stránky
+   ============================================ */
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}

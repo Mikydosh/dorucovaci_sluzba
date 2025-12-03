@@ -26,10 +26,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-
+                       
                          <!--ZÁSILKY - pouze Admin a Podpora  -->
                         @if (User.Identity.IsAuthenticated == true && (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.Podpora))))
                         {
@@ -92,11 +89,27 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - DorucovaciSluzba - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="bg-primary text-white mt-auto">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h5 class="mb-2">
+                        <i class="fas fa-shipping-fast me-2"></i>Doručovací služba
+                    </h5>
+                    <p class="mb-0">Made by <strong>Michal Dolanský</strong></p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-2">
+                        <i class="fas fa-envelope me-2"></i>info@dorucovaci-sluzba.cz
+                    </p>
+                    <p class="mb-0 small">
+                        &copy; 2025 Doručovací služba. Všechna práva vyhrazena.
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

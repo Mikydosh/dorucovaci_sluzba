@@ -2,46 +2,169 @@
     ViewData["Title"] = "Doručovací služba";
 }
 
-<div class="container mt-5 mb-5">
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-normal">Doručovací služba</h1>
+<!-- HERO SEKCE -->
+<div class="bg-primary text-white py-5 rounded">
+    <div class="container">
+        <div class="row align-items-center py-5">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-3 fw-bold mb-3">Rychlé a spolehlivé doručení</h1>
+                <p class="lead mb-0">
+                    Odesílejte a sledujte své zásilky s naší moderní doručovací službou.
+                    Máte své balíky pod kontrolou 24/7.
+                </p>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="row justify-content-center g-4 mt-5">
-
-        <!-- POSLAT BALÍK -->
+<!-- HLAVNÍ AKČNÍ KARTY S OBRÁZKY -->
+<div class="container" style="margin-top: -80px; margin-bottom: 100px;">
+    <div class="row justify-content-center g-4">
+        <!-- ODESLAT ZÁSILKU -->
         <div class="col-md-5">
-            <div class="card shadow-lg h-100 text-center border-primary">
-                <div class="card-body d-flex flex-column justify-content-center p-5">
-                    <h3 class="card-title mt-3 mb-3">
-                        Poslat zásilku
-                    </h3>
-                    <p class="card-text text-muted mb-4">
-                        Vyplňte formulář a odešlete zásilku
-                    </p>
-                    <a asp-area="Admin" asp-controller="Package" asp-action="Create" class="btn btn-primary btn-lg">
+            <div class="card shadow-lg h-100 border-0 hover-lift">
+                <img src="~/images/send-package.jpg"
+                     class="card-img-top"
+                     alt="Odeslat zásilku"
+                     style="height: 250px; object-fit: cover;" />
+                <div class="card-body text-center p-4">
+                    <h3 class="card-title mb-3">
+                        <i class="fas fa-paper-plane text-primary me-2"></i>
                         Odeslat zásilku
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- VYHLEDAT ZÁSILKU -->
-        <div class="col-md-5">
-            <div class="card shadow-lg h-100 text-center border-dark">
-                <div class="card-body d-flex flex-column justify-content-center p-5">
-                    <h3 class="card-title mt-3 mb-3">
-                        Vyhledat zásilku
                     </h3>
                     <p class="card-text text-muted mb-4">
-                        Sledujte stav vaší zásilky online
+                        Vyplňte jednoduchý formulář a odešlete svou zásilku rychle a bezpečně.
                     </p>
-                    <a asp-area="Admin" asp-controller="Package" asp-action="Track" class="btn btn-light btn-lg btn-outline-primary">
-                        Sledovat zásilku
+                    <a asp-area="Admin" asp-controller="Package" asp-action="Create"
+                       class="btn btn-primary btn-lg w-100">
+                        Vytvořit zásilku
                     </a>
                 </div>
             </div>
         </div>
 
+        <!-- SLEDOVAT ZÁSILKU -->
+        <div class="col-md-5">
+            <div class="card shadow-lg h-100 border-0 hover-lift">
+                <img src="~/images/track-package.jpg"
+                     class="card-img-top"
+                     alt="Sledovat zásilku"
+                     style="height: 250px; object-fit: cover;" />
+                <div class="card-body text-center p-4">
+                    <h3 class="card-title mb-3">
+                        <i class="fas fa-search text-success me-2"></i>
+                        Sledovat zásilku
+                    </h3>
+                    <p class="card-text text-muted mb-4">
+                        Sledujte stav vaší zásilky online v reálném čase pomocí sledovacího čísla.
+                    </p>
+                    <a asp-area="Admin" asp-controller="Package" asp-action="Track"
+                       class="btn btn-success btn-lg w-100">
+                        Vyhledat zásilku
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- INFO SEKCE - 3 VÝHODY -->
+<div class="container my-5 py-5">
+    <h2 class="text-center mb-5">Proč si vybrat nás?</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-bolt fa-3x text-warning"></i>
+                    </div>
+                    <h4 class="card-title mb-3">Rychlé doručení</h4>
+                    <p class="card-text text-muted">
+                        Doručujeme zásilky v nejkratším možném čase.
+                        Většina zásilek je doručena do 24 hodin.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-success"></i>
+                    </div>
+                    <h4 class="card-title mb-3">Bezpečné</h4>
+                    <p class="card-text text-muted">
+                        Vaše zásilky jsou v bezpečí. Každý balík je pojištěn
+                        a sledován po celou dobu přepravy.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-map-marked-alt fa-3x text-primary"></i>
+                    </div>
+                    <h4 class="card-title mb-3">Sledovatelné online</h4>
+                    <p class="card-text text-muted">
+                        Sledujte svou zásilku v reálném čase. Víte přesně,
+                        kde se váš balík nachází.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JAK TO FUNGUJE -->
+<div class="bg-light py-5 rounded">
+    <div class="container my-5">
+        <h2 class="text-center mb-5">Jak to funguje?</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-1 fw-bold">1</span>
+                    </div>
+                </div>
+                <h4 class="mb-3">Vytvořte zásilku</h4>
+                <p class="text-muted">
+                    Vyplňte jednoduchý formulář s údaji
+                    odesílatele a příjemce.
+                </p>
+            </div>
+
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-1 fw-bold">2</span>
+                    </div>
+                </div>
+                <h4 class="mb-3">Předejte kurýrovi</h4>
+                <p class="text-muted">
+                    Náš kurýr si zásilku vyzvedne na vámi
+                    zvolené adrese.
+                </p>
+            </div>
+
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-1 fw-bold">3</span>
+                    </div>
+                </div>
+                <h4 class="mb-3">Sledujte doručení</h4>
+                <p class="text-muted">
+                    Zásilku můžete sledovat online pomocí
+                    sledovacího čísla.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
