@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DorucovaciSluzba.Validations;
 
 namespace DorucovaciSluzba.Application.ViewModels
 {
@@ -7,15 +8,17 @@ namespace DorucovaciSluzba.Application.ViewModels
         [Required]
         public string? Username { get; set; }
 
+        [FirstLetterCapitalizedCZ]
         public string? FirstName { get; set; }
 
+        [FirstLetterCapitalizedCZ]
         public string? LastName { get; set; }
 
         [Required]
-        [EmailAddress]
+        [EmailCZ]
         public string? Email { get; set; }
 
-        [Phone]
+        [PhoneCZ]
         public string? Phone { get; set; }
 
         [Required]

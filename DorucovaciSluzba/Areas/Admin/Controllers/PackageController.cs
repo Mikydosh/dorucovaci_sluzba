@@ -479,7 +479,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 EmailConfirmed = false
             };
 
-            var result = await _userManager.CreateAsync(novy, "Temp123!");
+            var result = await _userManager.CreateAsync(novy);
 
             if (result.Succeeded)
             {

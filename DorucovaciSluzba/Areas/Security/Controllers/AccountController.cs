@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using DorucovaciSluzba.Application.Abstraction;
+﻿using DorucovaciSluzba.Application.Abstraction;
 using DorucovaciSluzba.Application.ViewModels;
-using DorucovaciSluzba.Domain.Enums;
 using DorucovaciSluzba.Controllers;
+using DorucovaciSluzba.Domain.Enums;
+using DorucovaciSluzba.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DorucovaciSluzba.Areas.Security.Controllers
 {
@@ -11,10 +13,16 @@ namespace DorucovaciSluzba.Areas.Security.Controllers
     public class AccountController : Controller 
     {
         IAccountService _accountService;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService,
+                                    SignInManager<User> signInManager,
+                                    UserManager<User> userManager)
         {
             _accountService = accountService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -32,18 +40,17 @@ namespace DorucovaciSluzba.Areas.Security.Controllers
 
                 if (errors == null)
                 {
-                    //login the user after registration
-                    LoginViewModel loginVM = new LoginViewModel()
-                    {
-                        Username = registerVM.Username,
-                        Password = registerVM.Password
-                    };
+                    // Přihlas uživatele přímo bez LoginViewModel
+                    var user = await _userManager.FindByEmailAsync(registerVM.Email);
 
-                    bool isLogged = await _accountService.Login(loginVM);
-                    if (isLogged)
+                    if (user != null)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: true);
                         return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), String.Empty), new { area = String.Empty });
-                    else
-                        return RedirectToAction(nameof(Login));
+                    }
+
+                    // Fallback - pokud se nepodaří najít uživatele (nemělo by nastat)
+                    return RedirectToAction(nameof(Login));
                 }
                 else
                 {

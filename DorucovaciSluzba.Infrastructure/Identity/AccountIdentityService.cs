@@ -29,6 +29,58 @@ namespace DorucovaciSluzba.Infrastructure.Identity
 
         public async Task<string[]> Register(RegisterViewModel vm, params Roles[] roles)
         {
+            // Zkontroluj, jestli uživatel s tímto emailem už existuje
+            var existingUser = await _userManager.FindByEmailAsync(vm.Email);
+
+            if (existingUser != null)
+            {
+                // Pokud uživatel existuje, ale NEMÁ HESLO (anonymní)
+                var hasPassword = await _userManager.HasPasswordAsync(existingUser);
+
+                if (!hasPassword)
+                {
+                    // Povyš anonymního uživatele na registrovaného
+                    existingUser.UserName = vm.Username;
+                    existingUser.FirstName = vm.FirstName;
+                    existingUser.LastName = vm.LastName;
+                    existingUser.PhoneNumber = vm.Phone;
+
+                    // Aktualizuj uživatele
+                    var updateResult = await _userManager.UpdateAsync(existingUser);
+                    if (!updateResult.Succeeded)
+                    {
+                        return updateResult.Errors.Select(e => e.Description).ToArray();
+                    }
+
+                    // Nastav heslo
+                    var addPasswordResult = await _userManager.AddPasswordAsync(existingUser, vm.Password);
+                    if (!addPasswordResult.Succeeded)
+                    {
+                        return addPasswordResult.Errors.Select(e => e.Description).ToArray();
+                    }
+
+                    // Přidej role
+                    foreach (var role in roles)
+                    {
+                        if (!await _userManager.IsInRoleAsync(existingUser, role.ToString()))
+                        {
+                            var roleResult = await _userManager.AddToRoleAsync(existingUser, role.ToString());
+                            if (!roleResult.Succeeded)
+                            {
+                                return roleResult.Errors.Select(e => e.Description).ToArray();
+                            }
+                        }
+                    }
+
+                    return null; // Úspěch - anonymní uživatel povýšen
+                }
+                else
+                {
+                    // Uživatel existuje a MÁ heslo → opravdu duplicita
+                    return new[] { "Uživatel s tímto e-mailem již existuje." };
+                }
+            }
+
             User user = new User()
             {
                 UserName = vm.Username,
@@ -47,12 +99,7 @@ namespace DorucovaciSluzba.Infrastructure.Identity
                 {
                     var resultRole = await _userManager.AddToRoleAsync(user, role.ToString());
                     if (!resultRole.Succeeded)
-                    {
-                        foreach (var error in resultRole.Errors)
-                        {
-                            // Přidáme chyby z role assignmentu
-                        }
-                    }
+                    {}
                 }
             }
 

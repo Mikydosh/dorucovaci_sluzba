@@ -1,68 +1,126 @@
 ﻿@model RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Registrace";
 }
 
-@section Styles
-{
-    <link rel="stylesheet" href="~/css/login.css" />
-}
-<div id="logreg-forms">
-    <form asp-action="Register" method="post" class="form-signup">
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Registrace
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-        <br />
-        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Register</h1>
-        <div class="social-login">
-            <button class="btn facebook-btn social-btn" type="button"><span><i class="fab fa-facebook-f"></i> Sign up with Facebook</span> </button>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Jméno
+                                </label>
+                                <input asp-for="FirstName"
+                                       type="text"
+                                       class="form-control"
+                                       placeholder="Zadejte jméno" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Příjmení
+                                </label>
+                                <input asp-for="LastName"
+                                       type="text"
+                                       class="form-control"
+                                       placeholder="Zadejte příjmení" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label">
+                                <i class="fas fa-at me-2"></i>Uživatelské jméno
+                            </label>
+                            <input asp-for="Username"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Zadejte uživatelské jméno" />
+                            <span asp-validation-for="Username" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>E-mail
+                            </label>
+                            <input asp-for="Email"
+                                   type="email"
+                                   class="form-control"
+                                   placeholder="Zadejte e-mail" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Telefon (nepovinné)
+                            </label>
+                            <input asp-for="Phone"
+                                   type="tel"
+                                   class="form-control"
+                                   placeholder="Zadejte telefon" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Heslo
+                            </label>
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-control"
+                                   placeholder="Zadejte heslo" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="RepeatedPassword" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Heslo znovu
+                            </label>
+                            <input asp-for="RepeatedPassword"
+                                   type="password"
+                                   class="form-control"
+                                   placeholder="Zadejte heslo znovu" />
+                            <span asp-validation-for="RepeatedPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Registrovat se
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <p class="mb-2 text-muted">Již máte účet?</p>
+                    <a asp-action="Login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Přihlásit se
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="social-login">
-            <button class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> Sign up with Google</span> </button>
-        </div>
-
-        <br />
-        <p style="text-align:center">OR</p>
-        <hr>
-
-        <div asp-validation-summary="All" class="text-danger"></div>
-
-        <input asp-for="Username" type="text" id="user-name" class="form-control" placeholder="Username" autofocus="">
-        <span asp-validation-for="Username" class="text-danger"></span>
-
-        <input asp-for="FirstName" type="text" id="first-name" class="form-control" placeholder="First name" autofocus="">
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-
-        <input asp-for="LastName" type="text" id="last-name" class="form-control" placeholder="Last name" autofocus="">
-        <span asp-validation-for="LastName" class="text-danger"></span>
-
-        <input asp-for="Email" type="email" id="user-email" class="form-control" placeholder="Email address" autofocus="">
-        <span asp-validation-for="Email" class="text-danger"></span>
-
-        <input asp-for="Phone" type="tel" id="user-phone" class="form-control" placeholder="Phone" autofocus="">
-        <span asp-validation-for="Phone" class="text-danger"></span>
-
-        <br />
-
-        <input asp-for="Password" type="password" id="user-pass" class="form-control" placeholder="Password" autofocus="">
-        <span asp-validation-for="Password" class="text-danger"></span>
-
-        <input asp-for="RepeatedPassword" type="password" id="user-repeatpass" class="form-control" placeholder="Repeat Password" autofocus="">
-        <span asp-validation-for="RepeatedPassword" class="text-danger"></span>
-
-        <br />
-
-        <div class="text-center">
-            <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> Sign Up</button>
-        </div>
-
-        <br />
-        <br />
-        <hr>
-        <a asp-action="Login" class="btn btn-success btn-block text-white" type="button" id="btn-signin"><i class="fas fa-sign-in-alt"></i> Sign in to Existing Account</a>
-
-    </form>
+    </div>
 </div>
 
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/Validation/FirstLetterCZ.js"></script>
+    <script src="~/js/Validation/EmailCZ.js"></script>
+    <script src="~/js/Validation/PhoneCZ.js"></script>
+
 }
