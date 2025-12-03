@@ -8,71 +8,103 @@
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- HLAVNÍ KARTA S DETAILY ZÁSILKY -->
+        <div class="col-lg-10">
             <div class="card shadow mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0 text-center">Zásilka číslo: @Model.Cislo</h3>
+                <!-- HLAVIČKA -->
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="mb-2">
+                        <i class="fas fa-box me-2"></i>Zásilka číslo: @Model.Cislo
+                    </h3>
+                    <h5 class="mb-0">
+                        <span class="badge bg-light text-dark">@Model.Stav?.Stav</span>
+                    </h5>
                 </div>
-                <div class="card-body">
-                    <!-- AKTUÁLNÍ STAV -->
-                    <div class="text-center mb-4">
-                        <h4 class="mb-2">
-                            <i class="bi bi-info-circle-fill"></i>
-                            Stav: <strong>@Model.Stav?.Stav</strong>
-                        </h4>
-                    </div>
 
-                    <!-- INFORMACE O ZÁSILCE -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h5>Datum odeslání</h5>
-                            <p>@Model.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</p>
+                <div class="card-body">
+                    <!-- PROSTOR PRO OBRÁZEK (budoucí) -->
+                    <div class="text-center mb-4">
+                        <div class="bg-light rounded p-5" style="min-height: 200px;">
+                            <i class="fas fa-image fa-4x text-muted"></i>
+                            <p class="text-muted mt-3 mb-0">Místo pro obrázek zásilky</p>
                         </div>
                     </div>
 
                     <hr />
 
-                    <!-- ODESÍLATEL -->
-                    <h5 class="text-primary">Odesílatel</h5>
-                    <p class="mb-1"><strong>Jméno:</strong> @odesilatel?.FirstName @odesilatel?.LastName</p>
-                    <p class="mb-1"><strong>E-mail:</strong> @odesilatel?.Email</p>
-                    @if (!string.IsNullOrEmpty(odesilatel?.Ulice))
-                    {
-                        <p class="mb-3">
-                            <strong>Adresa:</strong>
-                            @odesilatel.Ulice @odesilatel.CP,
-                            @odesilatel.Mesto, @odesilatel.Psc
-                        </p>
-                    }
+                    <!-- 3 SLOUPCE: ODESÍLATEL | PŘÍJEMCE | KURÝR -->
+                    <div class="row text-center mb-4">
+                        <!-- ODESÍLATEL -->
+                        <div class="col-md-4 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <h5 class="text-secondary mb-3">
+                                    <i class="fas fa-user me-2"></i>Odesílatel
+                                </h5>
+                                <p class="mb-1"><strong>@odesilatel?.FirstName @odesilatel?.LastName</strong></p>
+                                <p class="mb-1 small text-muted">
+                                    <i class="fas fa-envelope me-1"></i>@odesilatel?.Email
+                                </p>
+                                @if (!string.IsNullOrEmpty(odesilatel?.Ulice))
+                                {
+                                    <p class="mb-0 small text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        @odesilatel.Ulice @odesilatel.CP<br />
+                                        @odesilatel.Mesto, @odesilatel.Psc
+                                    </p>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- PŘÍJEMCE -->
+                        <div class="col-md-4 mb-3">
+                            <div class="border rounded p-3 h-100 border-primary">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-user-check me-2"></i>Příjemce
+                                </h5>
+                                <p class="mb-1"><strong>@prijemce?.FirstName @prijemce?.LastName</strong></p>
+                                <p class="mb-1 small text-muted">
+                                    <i class="fas fa-envelope me-1"></i>@prijemce?.Email
+                                </p>
+                                <p class="mb-0 small text-muted">
+                                    <i class="fas fa-map-marker-alt me-1 text-danger"></i>
+                                    @Model.DestinaceUlice @Model.DestinaceCP<br />
+                                    @Model.DestinaceMesto, @Model.DestinacePsc
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- KURÝR -->
+                        <div class="col-md-4 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                @if (kuryr != null)
+                                {
+                                    <h5 class="text-secondary mb-3">
+                                        <i class="fas fa-truck me-2"></i>Kurýr
+                                    </h5>
+                                    <p class="mb-1"><strong>@kuryr.FirstName @kuryr.LastName</strong></p>
+                                    <p class="mb-1 small text-muted">
+                                        <i class="fas fa-envelope me-1"></i>@kuryr.Email
+                                    </p>
+                                    @if (!string.IsNullOrEmpty(kuryr.Telefon))
+                                    {
+                                        <p class="mb-0 small text-muted">
+                                            <i class="fas fa-phone me-1"></i>@kuryr.Telefon
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <h5 class="text-muted mb-3">
+                                        <i class="fas fa-truck me-2"></i>Kurýr
+                                    </h5>
+                                    <p class="text-muted mb-0">Zatím nepřiřazen</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
 
                     <hr />
 
-                    <!-- PŘÍJEMCE -->
-                    <h5 class="text-dark">Příjemce</h5>
-                    <p class="mb-1"><strong>Jméno:</strong> @prijemce?.FirstName @prijemce?.LastName</p>
-                    <p class="mb-1"><strong>E-mail:</strong> @prijemce?.Email</p>
-                    <p class="mb-3">
-                        <strong>Adresa doručení:</strong>
-                        @Model.DestinaceUlice @Model.DestinaceCP,
-                        @Model.DestinaceMesto, @Model.DestinacePsc
-                    </p>
-
-                    @if (kuryr != null)
-                    {
-                        <hr />
-                        <h5 class="text-secondary">Kurýr</h5>
-                        <p class="mb-1"><strong>Jméno:</strong> @kuryr.FirstName @kuryr.LastName</p>
-                        <p class="mb-1"><strong>E-mail:</strong> @kuryr.Email</p>
-                        @if (!string.IsNullOrEmpty(kuryr.Telefon))
-                        {
-                            <p class="mb-1"><strong>Tel. číslo:</strong> @kuryr.Telefon</p>
-                        }
-                    }
-
-                    <hr />
-
-                    <!-- ✅ HISTORIE DORUČENÍ - UVNITŘ HLAVNÍ KARTY -->
+                    <!-- HISTORIE DORUČENÍ -->
                     <h5 class="text-success mb-3">
                         <i class="fas fa-history me-2"></i>Historie doručení
                     </h5>
@@ -84,7 +116,6 @@
 
                         if (vsechnyStavy != null && vsechnyStavy.Any())
                         {
-                            // Vytvoř dictionary pro rychlé vyhledání historie
                             var historieDict = historie?
                             .GroupBy(h => h.StavId)
                             .ToDictionary(g => g.Key, g => g.OrderByDescending(h => h.DatumZmeny).First())
@@ -96,23 +127,17 @@
                                     var stav = vsechnyStavy[i];
                                     var historyItem = historieDict.ContainsKey(stav.Id) ? historieDict[stav.Id] : null;
 
-                                    // Určení typu položky
                                     bool isCompleted = historyItem != null && stav.Id != aktualniStavId;
                                     bool isCurrent = stav.Id == aktualniStavId;
                                     bool isFuture = historyItem == null && !isCurrent;
-
-                                    // Reklamováno POUZE když je AKTUÁLNÍ
                                     bool isReclaimed = stav.Stav.Contains("Reklamováno") && isCurrent;
 
-                                    // Pokud je "Reklamováno" v historii, ale NENÍ aktuální → zobraz jako completed (šedý)
                                     var cssClass = isReclaimed ? "reclaimed" : (isCurrent ? "current" : (isCompleted ? "completed" : "future"));
 
                                     <div class="timeline-item @cssClass">
                                         <div class="timeline-badge @cssClass"></div>
                                         <div class="timeline-content">
-                                            <div class="timeline-title">
-                                                @stav.Stav
-                                            </div>
+                                            <div class="timeline-title">@stav.Stav</div>
                                             <div class="timeline-date">
                                                 @if (historyItem != null)
                                                 {
@@ -138,12 +163,14 @@
                         }
                     }
                 </div>
-                <div class="card-footer text-center">
-                    <a asp-action="Track" class="btn btn-primary">
-                        Vyhledat jinou zásilku
+
+                <!-- FOOTER S TLAČÍTKY -->
+                <div class="card-footer text-center py-3">
+                    <a asp-action="Track" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i>Vyhledat jinou zásilku
                     </a>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">
-                        Domů
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-home me-2"></i>Domů
                     </a>
                 </div>
             </div>
