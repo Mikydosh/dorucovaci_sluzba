@@ -21,11 +21,33 @@
                 </div>
 
                 <div class="card-body">
-                    <!-- PROSTOR PRO OBRÁZEK (budoucí) -->
+
+                    <!-- OBRÁZEK PODLE STAVU ZÁSILKY -->
                     <div class="text-center mb-4">
-                        <div class="bg-light rounded p-5" style="min-height: 200px;">
-                            <i class="fas fa-image fa-4x text-muted"></i>
-                            <p class="text-muted mt-3 mb-0">Místo pro obrázek zásilky</p>
+                        @{
+                            string imageFileName = Model.StavId switch
+                            {
+                                1 => "vytvoreno.png",
+                                2 => "prepravovano.png",
+                                3 => "doruceno.png",
+                                4 => "reklamovano.png",
+                                _ => "vytvoreno.png"
+                            };
+
+                            string imagePath = Url.Content($"~/images/package-states/{imageFileName}");
+                            string altText = Model.Stav?.Stav ?? "Zásilka";
+                        }
+
+                        <div class="rounded p-4">
+                            <img src="@imagePath"
+                                 alt="@altText"
+                                 class="img-fluid"
+                                 style="max-height: 350px; object-fit: contain;"
+                                 onerror="this.onerror=null; this.src='/images/placeholder.png'; this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                            <div style="display: none;">
+                                <i class="fas fa-image fa-5x text-muted"></i>
+                                <p class="text-muted mt-3">Obrázek nenalezen: @imageFileName</p>
+                            </div>
                         </div>
                     </div>
 
