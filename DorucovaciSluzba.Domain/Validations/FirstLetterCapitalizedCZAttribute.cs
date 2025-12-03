@@ -17,8 +17,10 @@ namespace DorucovaciSluzba.Validations
 
             string input = value.ToString().Trim();
 
+            if (string.IsNullOrWhiteSpace(input)) return true;
+
             // Musí začínat velkým písmenem a obsahovat pouze české znaky
-            return Regex.IsMatch(input, @"^[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+$");
+            return Regex.IsMatch(input, @"^[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][A-Za-záčďéěíňóřšťúůýž]*$");
         }
 
         public void AddValidation(ClientModelValidationContext context)
