@@ -6,22 +6,21 @@
     var kuryr = ViewBag.Kuryr as DorucovaciSluzba.Infrastructure.Identity.User;
 }
 
-<div class="container mt-4">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card shadow mb-4">
+            <div class="card border-0 shadow-lg rounded-4">
                 <!-- HLAVIČKA -->
-                <div class="card-header bg-primary text-white text-center py-4">
-                    <h3 class="mb-2">
+                <div class="card-header text-white text-center py-4 rounded-top-4" style="background: linear-gradient(135deg, #537280 0%, #6a8796 100%);">
+                    <h3 class="mb-2 fw-bold">
                         <i class="fas fa-box me-2"></i>Zásilka číslo: @Model.Cislo
                     </h3>
                     <h5 class="mb-0">
-                        <span class="badge bg-light text-dark">@Model.Stav?.Stav</span>
+                        <span class="badge bg-light text-dark px-3 py-2">@Model.Stav?.Stav</span>
                     </h5>
                 </div>
 
-                <div class="card-body">
-
+                <div class="card-body p-4">
                     <!-- OBRÁZEK PODLE STAVU ZÁSILKY -->
                     <div class="text-center mb-4">
                         @{
@@ -38,7 +37,7 @@
                             string altText = Model.Stav?.Stav ?? "Zásilka";
                         }
 
-                        <div class="rounded p-4">
+                        <div class="rounded-4 p-4 bg-light">
                             <img src="@imagePath"
                                  alt="@altText"
                                  class="img-fluid"
@@ -51,84 +50,90 @@
                         </div>
                     </div>
 
-                    <hr />
+                    <hr class="my-4" />
 
                     <!-- 3 SLOUPCE: ODESÍLATEL | PŘÍJEMCE | KURÝR -->
-                    <div class="row text-center mb-4">
+                    <div class="row text-center mb-4 g-3">
                         <!-- ODESÍLATEL -->
-                        <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <h5 class="text-secondary mb-3">
-                                    <i class="fas fa-user me-2"></i>Odesílatel
-                                </h5>
-                                <p class="mb-1"><strong>@odesilatel?.FirstName @odesilatel?.LastName</strong></p>
-                                <p class="mb-1 small text-muted">
-                                    <i class="fas fa-envelope me-1"></i>@odesilatel?.Email
-                                </p>
-                                @if (!string.IsNullOrEmpty(odesilatel?.Ulice))
-                                {
-                                    <p class="mb-0 small text-muted">
-                                        <i class="fas fa-map-marker-alt me-1"></i>
-                                        @odesilatel.Ulice @odesilatel.CP<br />
-                                        @odesilatel.Mesto, @odesilatel.Psc
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow h-100 rounded-4">
+                                <div class="card-body p-3">
+                                    <h5 class="text-primary mb-3 fw-bold">
+                                        <i class="fas fa-user me-2"></i>Odesílatel
+                                    </h5>
+                                    <p class="mb-2 fw-semibold">@odesilatel?.FirstName @odesilatel?.LastName</p>
+                                    <p class="mb-2 small text-muted">
+                                        <i class="fas fa-envelope me-1"></i>@odesilatel?.Email
                                     </p>
-                                }
+                                    @if (!string.IsNullOrEmpty(odesilatel?.Ulice))
+                                    {
+                                        <p class="mb-0 small text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            @odesilatel.Ulice @odesilatel.CP<br />
+                                            @odesilatel.Mesto, @odesilatel.Psc
+                                        </p>
+                                    }
+                                </div>
                             </div>
                         </div>
 
                         <!-- PŘÍJEMCE -->
-                        <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100 border-primary">
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-user-check me-2"></i>Příjemce
-                                </h5>
-                                <p class="mb-1"><strong>@prijemce?.FirstName @prijemce?.LastName</strong></p>
-                                <p class="mb-1 small text-muted">
-                                    <i class="fas fa-envelope me-1"></i>@prijemce?.Email
-                                </p>
-                                <p class="mb-0 small text-muted">
-                                    <i class="fas fa-map-marker-alt me-1 text-danger"></i>
-                                    @Model.DestinaceUlice @Model.DestinaceCP<br />
-                                    @Model.DestinaceMesto, @Model.DestinacePsc
-                                </p>
+                        <div class="col-md-4">
+                            <div class="card border-2 border-success shadow h-100 rounded-4">
+                                <div class="card-body p-3">
+                                    <h5 class="text-success mb-3 fw-bold">
+                                        <i class="fas fa-user-check me-2"></i>Příjemce
+                                    </h5>
+                                    <p class="mb-2 fw-semibold">@prijemce?.FirstName @prijemce?.LastName</p>
+                                    <p class="mb-2 small text-muted">
+                                        <i class="fas fa-envelope me-1"></i>@prijemce?.Email
+                                    </p>
+                                    <p class="mb-0 small text-muted">
+                                        <i class="fas fa-map-marker-alt me-1 text-danger"></i>
+                                        @Model.DestinaceUlice @Model.DestinaceCP<br />
+                                        @Model.DestinaceMesto, @Model.DestinacePsc
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
                         <!-- KURÝR -->
-                        <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                @if (kuryr != null)
-                                {
-                                    <h5 class="text-secondary mb-3">
-                                        <i class="fas fa-truck me-2"></i>Kurýr
-                                    </h5>
-                                    <p class="mb-1"><strong>@kuryr.FirstName @kuryr.LastName</strong></p>
-                                    <p class="mb-1 small text-muted">
-                                        <i class="fas fa-envelope me-1"></i>@kuryr.Email
-                                    </p>
-                                    @if (!string.IsNullOrEmpty(kuryr.Telefon))
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow h-100 rounded-4">
+                                <div class="card-body p-3">
+                                    @if (kuryr != null)
                                     {
-                                        <p class="mb-0 small text-muted">
-                                            <i class="fas fa-phone me-1"></i>@kuryr.Telefon
+                                        <h5 class="text-warning mb-3 fw-bold">
+                                            <i class="fas fa-truck me-2"></i>Kurýr
+                                        </h5>
+                                        <p class="mb-2 fw-semibold">@kuryr.FirstName @kuryr.LastName</p>
+                                        <p class="mb-2 small text-muted">
+                                            <i class="fas fa-envelope me-1"></i>@kuryr.Email
                                         </p>
+                                        @if (!string.IsNullOrEmpty(kuryr.Telefon))
+                                        {
+                                            <p class="mb-0 small text-muted">
+                                                <i class="fas fa-phone me-1"></i>@kuryr.Telefon
+                                            </p>
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    <h5 class="text-muted mb-3">
-                                        <i class="fas fa-truck me-2"></i>Kurýr
-                                    </h5>
-                                    <p class="text-muted mb-0">Zatím nepřiřazen</p>
-                                }
+                                    else
+                                    {
+                                        <h5 class="text-muted mb-3 fw-bold">
+                                            <i class="fas fa-truck me-2"></i>Kurýr
+                                        </h5>
+                                        <p class="text-muted mb-0">Zatím nepřiřazen</p>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <hr />
+                    <hr class="my-4" />
 
                     <!-- HISTORIE DORUČENÍ -->
-                    <h5 class="text-success mb-3">
-                        <i class="fas fa-history me-2"></i>Historie doručení
+                    <h5 class="mb-4 fw-bold">
+                        <i class="fas fa-history me-2 text-primary"></i>Historie doručení
                     </h5>
 
                     @{
@@ -178,7 +183,7 @@
                         }
                         else
                         {
-                            <div class="alert alert-info mb-0">
+                            <div class="alert alert-info mb-0 rounded-4">
                                 <i class="fas fa-info-circle me-2"></i>
                                 Zatím nebyla zaznamenána žádná změna stavu.
                             </div>
@@ -187,13 +192,15 @@
                 </div>
 
                 <!-- FOOTER S TLAČÍTKY -->
-                <div class="card-footer text-center py-3">
-                    <a asp-action="Track" class="btn btn-outline-primary">
-                        <i class="fas fa-search me-2"></i>Vyhledat jinou zásilku
-                    </a>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-home me-2"></i>Domů
-                    </a>
+                <div class="card-footer bg-light text-center py-4 border-0 rounded-bottom-4">
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a asp-action="Track" class="btn btn-primary btn-lg px-4">
+                            <i class="fas fa-search me-2"></i>Vyhledat jinou zásilku
+                        </a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg px-4">
+                            <i class="fas fa-home me-2"></i>Domů
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -26,11 +26,11 @@
     }
 }
 
-<div class="container-fluid mt-4">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row mt-1">
         <div class="col-12">
-            <h1 class="mb-4">
-                <i class="fa-solid fa-user-pen"></i> @ViewData["Title"]
+            <h1 class="display-6 text-center fw-bold mb-2">
+                <i class="fa-solid fa-user-pen text-primary"></i> @ViewData["Title"]
             </h1>
 
             <!-- Vyhledávací formulář -->
@@ -182,7 +182,22 @@
                                                 {
                                                     foreach (var role in userRoles[user.Id])
                                                     {
-                                                        <span class="badge bg-secondary me-1">@role</span>
+                                                        @if (role == "Admin")
+                                                        {
+                                                            <span class="badge bg-danger">Admin</span>
+                                                        }
+                                                        else if (role == "Podpora")
+                                                        {
+                                                            <span class="badge bg-success">Podpora</span>
+                                                        }
+                                                        else if (@role == "Kuryr")
+                                                        {
+                                                            <span class="badge bg-primary">Kurýr</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-info">Uživatel</span>
+                                                        }
                                                     }
                                                 }
                                                 else
@@ -194,7 +209,7 @@
                                                 <div class="btn-group" role="group">
                                                     <a asp-action="Edit"
                                                        asp-route-id="@user.Id"
-                                                       class="btn btn-sm btn-warning"
+                                                       class="btn btn-sm btn-info"
                                                        title="Upravit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

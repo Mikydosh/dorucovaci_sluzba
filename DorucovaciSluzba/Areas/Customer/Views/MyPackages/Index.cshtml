@@ -8,7 +8,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">
+            <h2 class="mb-4 text-center">
                 <i class="fas fa-box me-2"></i>Moje zásilky
             </h2>
 
@@ -43,11 +43,11 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <div class="card border-info shadow-sm">
+                        <div class="card border-primary shadow-sm">
                             <div class="card-body text-center">
-                                <i class="fas fa-arrow-down fa-3x text-info mb-3"></i>
+                                <i class="fas fa-arrow-down fa-3x text-primary mb-3"></i>
                                 <h5 class="card-title mb-2">Přijaté zásilky</h5>
-                                <p class="fs-1 fw-bold mb-0 text-info">@prijate</p>
+                                <p class="fs-1 fw-bold mb-0 text-primary">@prijate</p>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,22 @@
                                                 <small class="text-muted">@zasilka.DatumOdeslani.ToString("HH:mm")</small>
                                             </td>
                                             <td class="align-middle">
-                                                <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                                @if (zasilka.StavId == 2)
+                                                {
+                                                    <span class="badge bg-primary">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 3)
+                                                {
+                                                    <span class="badge bg-success">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else if (zasilka.StavId == 4)
+                                                {
+                                                    <span class="badge bg-danger">@zasilka.Stav?.Stav</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-info">@zasilka.Stav?.Stav</span>
+                                                }
                                             </td>
                                             <td class="align-middle">
                                                 <small>
@@ -108,7 +123,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-info mb-1">
+                                                    <span class="badge bg-primary mb-1">
                                                         <i class="fas fa-arrow-down me-1"></i>Přijatá
                                                     </span>
                                                     <br />
@@ -122,9 +137,9 @@
                                                    asp-controller="Package"
                                                    asp-action="Detail"
                                                    asp-route-id="@zasilka.Id"
-                                                   class="btn btn-sm btn-info"
+                                                   class="btn btn-sm btn-secondary"
                                                    title="Zobrazit detail">
-                                                    <i class="fas fa-eye text-white"></i>
+                                                    <i class="fas fa-eye text-dark"></i>
                                                 </a>
                                             </td>
                                         </tr>

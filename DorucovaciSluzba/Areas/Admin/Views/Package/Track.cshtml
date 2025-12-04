@@ -1,56 +1,73 @@
 ﻿@model DorucovaciSluzba.Models.Package.TrackPackageViewModel
-
 @{
     ViewData["Title"] = "Sledování zásilky";
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-dark text-white text-center">
-                    <h3 class="mb-0">Sledování zásilky</h3>
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-header text-white text-center py-4 rounded-top-4" style="background: linear-gradient(135deg, #E8A87C 0%, #e39563 100%);">
+                    <i class="fas fa-search fa-2x mb-2"></i>
+                    <h3 class="mb-0 fw-bold">Sledování zásilky</h3>
+                    <p class="mb-0 small opacity-75">Zadejte číslo zásilky a email</p>
                 </div>
                 <div class="card-body p-4">
-
                     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
                     {
-                        <div class="text-center text-danger">
+                        <div class="alert alert-danger rounded-3 mb-4" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
                             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                             {
-                                <p class="mb-2">@error.ErrorMessage</p>
+                                <div>@error.ErrorMessage</div>
                             }
                         </div>
                     }
 
                     <form asp-action="Track" method="post">
                         <div class="mb-4">
-                            <label asp-for="CisloZasilky" class="form-label fw-bold"></label>
+                            <label asp-for="CisloZasilky" class="form-label fw-semibold">
+                                <i class="fa-solid fa-hashtag me-1 text-warning"></i>
+                                Číslo zásilky
+                            </label>
                             <input asp-for="CisloZasilky"
-                                   class="form-control"
+                                   class="form-control form-control-lg"
                                    placeholder="123-45-67"
                                    maxlength="11" />
                             <span asp-validation-for="CisloZasilky" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="Email" class="form-label fw-bold"></label>
+                            <label asp-for="Email" class="form-label fw-semibold">
+                                <i class="fas fa-envelope me-1 text-warning"></i>
+                                E-mail
+                            </label>
                             <input asp-for="Email"
                                    type="email"
-                                   class="form-control"
+                                   class="form-control form-control-lg"
                                    placeholder="vas@email.cz" />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-search"></i> Vyhledat zásilku
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-warning btn-lg text-white fw-semibold">
+                                <i class="fas fa-search me-2"></i>Vyhledat zásilku
                             </button>
-                            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">
-                                Zpět na úvodní stránku
+                        </div>
+
+                        <div class="text-center">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-link text-primary fw-semibold text-decoration-none">
+                                <i class="fas fa-arrow-left me-1"></i>Zpět na úvodní stránku
                             </a>
                         </div>
                     </form>
+                </div>
+
+                <div class="card-footer bg-light text-center py-3 rounded-bottom-4 border-0">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Číslo zásilky najdete v potvrzovacím emailu
+                    </small>
                 </div>
             </div>
         </div>
@@ -59,7 +76,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script src="~/js/Validation/PackageNumCZ.js"></script>
     <script src="~/js/Validation/EmailCZ.js"></script>
 }

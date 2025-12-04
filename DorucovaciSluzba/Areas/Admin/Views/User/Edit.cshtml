@@ -4,32 +4,47 @@
     ViewData["Title"] = "Úprava uživatele";
 }
 
-<div class="container mt-4">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="mb-4 text-center">@ViewData["Title"]</h1>
+            <!-- HLAVNÍ NADPIS -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-user-edit text-primary"></i>
+                    Úprava uživatele
+                </h1>
+                <p class="text-muted lead">Upravte osobní údaje a nastavení</p>
+            </div>
 
             <form asp-action="Edit" method="post" class="needs-validation" novalidate>
                 <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-4"></div>
 
                 <!-- OSOBNÍ ÚDAJE -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0 text-center">Osobní údaje</h4>
+                <div class="card border-0 shadow mb-4 rounded-4">
+                    <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #537280 0%, #6a8796 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-id-card me-2"></i>Osobní údaje
+                        </h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="row">
                             <!-- Jméno -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="FirstName" class="form-label fw-bold"></label>
-                                <input asp-for="FirstName" class="form-control" />
+                                <label asp-for="FirstName" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-1 text-primary"></i>
+                                    Jméno
+                                </label>
+                                <input asp-for="FirstName" class="form-control" placeholder="Zadejte jméno" />
                                 <span asp-validation-for="FirstName" class="text-danger small"></span>
                             </div>
                             <!-- Příjmení -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="LastName" class="form-label fw-bold"></label>
-                                <input asp-for="LastName" class="form-control" />
+                                <label asp-for="LastName" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-1 text-primary"></i>
+                                    Příjmení
+                                </label>
+                                <input asp-for="LastName" class="form-control" placeholder="Zadejte příjmení" />
                                 <span asp-validation-for="LastName" class="text-danger small"></span>
                             </div>
                         </div>
@@ -37,8 +52,11 @@
                         <div class="row">
                             <!-- E-mail -->
                             <div class="col-md-12 mb-3">
-                                <label asp-for="Email" class="form-label fw-bold"></label>
-                                <input asp-for="Email" type="email" class="form-control" />
+                                <label asp-for="Email" class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-1 text-primary"></i>
+                                    E-mail
+                                </label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="email@example.com" />
                                 <span asp-validation-for="Email" class="text-danger small"></span>
                             </div>
                         </div>
@@ -46,13 +64,19 @@
                         <div class="row">
                             <!-- Telefon -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Telefon" class="form-label fw-bold"></label>
+                                <label asp-for="Telefon" class="form-label fw-semibold">
+                                    <i class="fas fa-phone me-1 text-primary"></i>
+                                    Telefon
+                                </label>
                                 <input asp-for="Telefon" type="tel" class="form-control" placeholder="123 456 789" />
                                 <span asp-validation-for="Telefon" class="text-danger small"></span>
                             </div>
                             <!-- Datum narození -->
                             <div class="col-md-6 mb-3">
-                                <label asp-for="DatumNarozeni" class="form-label fw-bold"></label>
+                                <label asp-for="DatumNarozeni" class="form-label fw-semibold">
+                                    <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                                    Datum narození
+                                </label>
                                 <input asp-for="DatumNarozeni" type="date" class="form-control" />
                                 <span asp-validation-for="DatumNarozeni" class="text-danger small"></span>
                             </div>
@@ -61,35 +85,49 @@
                 </div>
 
                 <!-- ADRESA -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0 text-center">Adresa</h4>
+                <div class="card border-0 shadow mb-4 rounded-4">
+                    <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #E8A87C 0%, #e39563 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-map-marker-alt me-2"></i>Adresa
+                        </h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="row">
                             <!-- Ulice -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Ulice" class="form-label fw-bold"></label>
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Ulice" class="form-label fw-semibold">
+                                    <i class="fas fa-road me-1 text-warning"></i>
+                                    Ulice
+                                </label>
                                 <input asp-for="Ulice" class="form-control" placeholder="Např. Hlavní" />
                                 <span asp-validation-for="Ulice" class="text-danger small"></span>
                             </div>
                             <!-- CP -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="CP" class="form-label fw-bold"></label>
-                                <input asp-for="CP" class="form-control" placeholder="Např. 123" />
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CP" class="form-label fw-semibold">
+                                    <i class="fas fa-home me-1 text-warning"></i>
+                                    Číslo popisné
+                                </label>
+                                <input asp-for="CP" class="form-control" placeholder="123" />
                                 <span asp-validation-for="CP" class="text-danger small"></span>
                             </div>
                         </div>
                         <div class="row">
                             <!-- Město -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Mesto" class="form-label fw-bold"></label>
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Mesto" class="form-label fw-semibold">
+                                    <i class="fas fa-city me-1 text-warning"></i>
+                                    Město
+                                </label>
                                 <input asp-for="Mesto" class="form-control" placeholder="Např. Praha" />
                                 <span asp-validation-for="Mesto" class="text-danger small"></span>
                             </div>
                             <!-- PSČ -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Psc" class="form-label fw-bold"></label>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Psc" class="form-label fw-semibold">
+                                    <i class="fas fa-mail-bulk me-1 text-warning"></i>
+                                    PSČ
+                                </label>
                                 <input asp-for="Psc" class="form-control" placeholder="123 45" />
                                 <span asp-validation-for="Psc" class="text-danger small"></span>
                             </div>
@@ -98,31 +136,40 @@
                 </div>
 
                 <!-- ROLE -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-light text-dark">
-                        <h4 class="mb-0 text-center">Role uživatele</h4>
+                <div class="card border-0 shadow mb-4 rounded-4">
+                    <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #6BB77B 0%, #5ca569 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-user-shield me-2"></i>Role uživatele
+                        </h4>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label asp-for="RoleId" class="form-label fw-bold"></label>
-                            <select asp-for="RoleId" class="form-select">
+                    <div class="card-body p-4">
+                        <div class="mb-0">
+                            <label asp-for="RoleId" class="form-label fw-semibold">
+                                <i class="fas fa-key me-1 text-success"></i>
+                                Přiřazená role
+                            </label>
+                            <select asp-for="RoleId" class="form-select form-select-lg">
                                 @foreach (var role in Model.DostupneRole ?? new List<DorucovaciSluzba.Infrastructure.Identity.Role>())
                                 {
                                     <option value="@role.Id">@role.Name</option>
                                 }
                             </select>
                             <span asp-validation-for="RoleId" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Role určuje přístupová práva uživatele v systému.
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- TLAČÍTKA -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-                    <a asp-action="Select" class="btn btn-secondary btn-lg">
-                        Zrušit
+                <div class="d-flex gap-3 justify-content-end mb-4">
+                    <a asp-action="Select" class="btn btn-secondary btn-lg px-5">
+                        <i class="fas fa-times me-2"></i>Zrušit
                     </a>
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        Uložit změny
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-save me-2"></i>Uložit změny
                     </button>
                 </div>
             </form>

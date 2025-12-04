@@ -5,66 +5,88 @@
     var returnUrl = ViewBag.ReturnUrl as string;
 }
 
-<div class="container mt-4">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
-            <h1 class="mb-4 text-center">@ViewData["Title"]</h1>
+        <div class="col-lg-10">
+            <!-- HLAVNÍ NADPIS -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-edit text-primary"></i>
+                    Úprava zásilky
+                </h1>
+                <p class="text-muted lead">Změňte stav nebo přiřaďte kurýra</p>
+            </div>
 
             <form asp-action="Edit" method="post" class="needs-validation" novalidate>
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                <div class="row">
-                    <!-- INFORMACE O ZÁSILCE (readonly) -->
-                    <div class="col-6">
-                        <div class="card shadow-sm mb-4">
-                            <div class="mb-0 card-header bg-dark text-white">
-                                <h4 class="mb-0 text-center">Informace o zásilce</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-2">
-                                    <label class="form-label fw-bold mb-1">Číslo zásilky:</label>
-                                    <p class="mb-0">@Model.Cislo</p>
-                                </div>
-                                <hr class="my-2" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-4"></div>
 
-                                <div class="mb-2">
-                                    <label class="form-label fw-bold mb-1">Datum odeslání:</label>
+                <div class="row g-4">
+                    <!-- LEVÁ STRANA - INFORMACE O ZÁSILCE (readonly) -->
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow rounded-4 h-100">
+                            <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #537280 0%, #6a8796 100%);">
+                                <h4 class="mb-0 fw-bold">
+                                    <i class="fas fa-info-circle me-2"></i>Informace o zásilce
+                                </h4>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <label class="form-label fw-semibold text-muted small mb-1">
+                                        <i class="fas fa-barcode me-1"></i>Číslo zásilky
+                                    </label>
+                                    <p class="mb-0 fs-5 fw-bold text-primary">@Model.Cislo</p>
+                                </div>
+
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <label class="form-label fw-semibold text-muted small mb-1">
+                                        <i class="fas fa-calendar-alt me-1"></i>Datum odeslání
+                                    </label>
                                     <p class="mb-0">@Model.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</p>
                                 </div>
-                                <hr class="my-2" />
 
-                                <div class="mb-2">
-                                    <label class="form-label fw-bold mb-1">Odesílatel:</label>
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <label class="form-label fw-semibold text-muted small mb-1">
+                                        <i class="fas fa-user me-1"></i>Odesílatel
+                                    </label>
                                     <p class="mb-0">@Model.OdesilatelJmeno</p>
                                 </div>
-                                <hr class="my-2" />
 
-                                <div class="mb-2">
-                                    <label class="form-label fw-bold mb-1">Příjemce:</label>
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <label class="form-label fw-semibold text-muted small mb-1">
+                                        <i class="fas fa-user-check me-1"></i>Příjemce
+                                    </label>
                                     <p class="mb-0">@Model.PrijemceJmeno</p>
                                 </div>
-                                <hr class="my-2" />
 
                                 <div class="mb-0">
-                                    <label class="form-label fw-bold mb-1">Adresa doručení:</label>
+                                    <label class="form-label fw-semibold text-muted small mb-1">
+                                        <i class="fas fa-map-marker-alt me-1"></i>Adresa doručení
+                                    </label>
                                     <p class="mb-0">@Model.DestinaceAdresa</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- STAV ZÁSILKY (editovatelný) -->
-                    <div class="col-6">
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-dark text-white">
-                                <h4 class="mb-0 text-center">Stav zásilky</h4>
+                    <!-- PRAVÁ STRANA - EDITOVATELNÉ POLOŽKY -->
+                    <div class="col-md-6">
+                        <!-- STAV ZÁSILKY -->
+                        <div class="card border-0 shadow rounded-4 mb-4">
+                            <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #E8A87C 0%, #e39563 100%);">
+                                <h4 class="mb-0 fw-bold">
+                                    <i class="fas fa-sync-alt me-2"></i>Stav zásilky
+                                </h4>
                             </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label asp-for="StavId" class="form-label fw-bold"></label>
-                                    <select asp-for="StavId" class="form-select">
+                            <div class="card-body p-4">
+                                <div class="mb-0">
+                                    <label asp-for="StavId" class="form-label fw-semibold">
+                                        <i class="fas fa-clipboard-list me-1 text-warning"></i>
+                                        Aktuální stav
+                                    </label>
+                                    <select asp-for="StavId" class="form-select form-select-lg">
                                         @foreach (var stav in Model.DostupneStavy ?? new List<DorucovaciSluzba.Domain.Entities.StavZasilka>())
                                         {
                                             <option value="@stav.Id">@stav.Stav</option>
@@ -72,23 +94,29 @@
                                     </select>
                                     <span asp-validation-for="StavId" class="text-danger small"></span>
                                     <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
                                         Změňte stav podle aktuální situace zásilky.
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- KURÝR (editovatelný) -->
+
+                        <!-- KURÝR (pouze pro Admin a Podpora) -->
                         @if (User.IsInRole("Admin") || User.IsInRole("Podpora"))
                         {
-                            <!-- KURÝR (editovatelný) -->
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-header bg-light text-dark">
-                                    <h4 class="mb-0 text-center">Přiřazení kurýra</h4>
+                            <div class="card border-0 shadow rounded-4">
+                                <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #6BB77B 0%, #5ca569 100%);">
+                                    <h4 class="mb-0 fw-bold">
+                                        <i class="fas fa-user-tie me-2"></i>Přiřazení kurýra
+                                    </h4>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label asp-for="KuryrId" class="form-label fw-bold"></label>
-                                        <select asp-for="KuryrId" class="form-select">
+                                <div class="card-body p-4">
+                                    <div class="mb-0">
+                                        <label asp-for="KuryrId" class="form-label fw-semibold">
+                                            <i class="fas fa-truck me-1 text-success"></i>
+                                            Vyberte kurýra
+                                        </label>
+                                        <select asp-for="KuryrId" class="form-select form-select-lg">
                                             <option value="">-- Nepřiřazen --</option>
                                             @foreach (var kuryr in Model.DostupniKuryri ?? new List<DorucovaciSluzba.Infrastructure.Identity.User>())
                                             {
@@ -99,37 +127,39 @@
                                         </select>
                                         <span asp-validation-for="KuryrId" class="text-danger small"></span>
                                         <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
                                             Vyberte kurýra, který má zásilku doručit.
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         }
-
+                    </div>
                 </div>
 
-
-
-                    <!-- TLAČÍTKA -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
-                        @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl as string))
-                        {
-                            <a href="@ViewBag.ReturnUrl" class="btn btn-secondary btn-lg">
-                                Zrušit
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-action="Select" class="btn btn-secondary btn-lg">
-                                Zrušit
-                            </a>
-                        }
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            Uložit změny
-                        </button>
-                    </div>
+                <!-- TLAČÍTKA -->
+                <div class="d-flex gap-3 justify-content-end mt-5">
+                    @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl as string))
+                    {
+                        <a href="@ViewBag.ReturnUrl" class="btn btn-secondary btn-lg px-5">
+                            <i class="fas fa-times me-2"></i>Zrušit
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Select" class="btn btn-secondary btn-lg px-5">
+                            <i class="fas fa-times me-2"></i>Zrušit
+                        </a>
+                    }
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-save me-2"></i>Uložit změny
+                    </button>
+                </div>
             </form>
-
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
