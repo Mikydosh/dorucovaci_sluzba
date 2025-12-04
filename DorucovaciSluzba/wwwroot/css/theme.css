@@ -1,0 +1,286 @@
+/* ============================================
+   FINÁLNÍ BAREVNÁ PALETA
+   ============================================ */
+
+:root {
+    --bs-primary: #537280;
+    --bs-primary-rgb: 83, 114, 128;
+    --bs-secondary: #B8CDD9;
+    --bs-secondary-rgb: 184, 205, 217;
+    --bs-success: #6BB77B;
+    --bs-success-rgb: 107, 183, 123;
+    --bs-info: #E5C89B;
+    --bs-info-rgb: 229, 200, 155;
+    --bs-warning: #E8A87C;
+    --bs-warning-rgb: 232, 168, 124;
+    --bs-danger: #D96B5C;
+    --bs-danger-rgb: 217, 107, 92;
+}
+
+/* Primary */
+.bg-primary {
+    background-color: #537280 !important;
+}
+
+.text-primary {
+    color: #537280 !important;
+}
+
+.btn-primary {
+    background-color: #537280;
+    border-color: #537280;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #465f6b;
+        border-color: #465f6b;
+    }
+
+.btn-outline-primary {
+    color: #537280;
+    border-color: #537280;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #537280;
+        border-color: #537280;
+        color: white;
+    }
+
+.border-primary {
+    border-color: #537280 !important;
+}
+
+/* Secondary */
+.bg-secondary {
+    background-color: #B8CDD9 !important;
+    color: #2d3748 !important;
+}
+
+.text-secondary {
+    color: #B8CDD9 !important;
+}
+
+.btn-secondary {
+    background-color: #B8CDD9;
+    border-color: #B8CDD9;
+    color: #2d3748;
+}
+
+    .btn-secondary:hover {
+        background-color: #a7c0cf;
+        border-color: #a7c0cf;
+    }
+
+.border-secondary {
+    border-color: #B8CDD9 !important;
+}
+
+/* Success */
+.bg-success {
+    background-color: #6BB77B !important;
+}
+
+.text-success {
+    color: #6BB77B !important;
+}
+
+.btn-success {
+    background-color: #6BB77B;
+    border-color: #6BB77B;
+    color: white;
+}
+
+    .btn-success:hover {
+        background-color: #5ca569;
+        border-color: #5ca569;
+    }
+
+.border-success {
+    border-color: #6BB77B !important;
+}
+
+/* Info */
+.bg-info {
+    background-color: #E5C89B !important;
+    color: #2d3748 !important;
+}
+
+.text-info {
+    color: #E5C89B !important;
+}
+
+.btn-info {
+    background-color: #E5C89B;
+    border-color: #E5C89B;
+    color: #2d3748;
+}
+
+    .btn-info:hover {
+        background-color: #dfbc87;
+        border-color: #dfbc87;
+    }
+
+.border-info {
+    border-color: #E5C89B !important;
+}
+
+/* Warning */
+.bg-warning {
+    background-color: #E8A87C !important;
+    color: white !important;
+}
+
+.text-warning {
+    color: #E8A87C !important;
+}
+
+.btn-warning {
+    background-color: #E8A87C;
+    border-color: #E8A87C;
+    color: white;
+}
+
+    .btn-warning:hover {
+        background-color: #e39563;
+        border-color: #e39563;
+    }
+
+.border-warning {
+    border-color: #E8A87C !important;
+}
+
+/* Danger */
+.bg-danger {
+    background-color: #D96B5C !important;
+}
+
+.text-danger {
+    color: #D96B5C !important;
+}
+
+.btn-danger {
+    background-color: #D96B5C;
+    border-color: #D96B5C;
+    color: white;
+}
+
+    .btn-danger:hover {
+        background-color: #d1574a;
+        border-color: #d1574a;
+    }
+
+.border-danger {
+    border-color: #D96B5C !important;
+}
+
+/* ============================================
+   HOME PAGE - Karty
+   ============================================ */
+
+/* Modrá karta "Odeslat zásilku" */
+.home-card-send {
+    background-color: white;
+    border: 2px solid #e5e7eb !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+    .home-card-send:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 1rem 3rem rgba(83, 114, 128, 0.15) !important;
+        border-color: #537280 !important;
+    }
+
+    .home-card-send .card-img-top {
+        background: linear-gradient(135deg, rgba(83, 114, 128, 0.9) 0%, rgba(106, 135, 150, 0.9) 100%);
+        border-radius: 0;
+    }
+
+    .home-card-send .card-title {
+        color: #537280;
+    }
+
+    .home-card-send .btn-primary {
+        background-color: #537280;
+        border-color: #537280;
+        color: white;
+    }
+
+        .home-card-send .btn-primary:hover {
+            background-color: #465f6b;
+            border-color: #465f6b;
+        }
+
+/* Oranžová karta "Sledovat zásilku" */
+.home-card-track {
+    background-color: white;
+    border: 2px solid #e5e7eb !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+    .home-card-track:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 1rem 3rem rgba(232, 168, 124, 0.15) !important;
+        border-color: #E8A87C !important;
+    }
+
+    .home-card-track .card-img-top {
+        background: linear-gradient(135deg, rgba(232, 168, 124, 0.9) 0%, rgba(227, 149, 99, 0.9) 100%);
+        border-radius: 0;
+    }
+
+    .home-card-track .card-title {
+        color: #E8A87C;
+    }
+
+    .home-card-track .btn-warning {
+        background-color: #E8A87C;
+        border-color: #E8A87C;
+        color: white;
+    }
+
+        .home-card-track .btn-warning:hover {
+            background-color: #e39563;
+            border-color: #e39563;
+            color: white;
+        }
+
+/* ============================================
+   INFO KARTY - "Proè si vybrat nás?"
+   ============================================ */
+
+.info-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #e5e7eb !important;
+    transition: all 0.3s ease;
+}
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1) !important;
+    }
+
+.info-card-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+    .info-card-icon.warning {
+        background: rgba(232, 168, 124, 0.15);
+        color: #E8A87C;
+    }
+
+    .info-card-icon.success {
+        background: rgba(107, 183, 123, 0.15);
+        color: #6BB77B;
+    }
+
+.info-

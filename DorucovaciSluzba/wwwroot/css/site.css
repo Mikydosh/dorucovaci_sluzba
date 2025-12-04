@@ -1,43 +1,129 @@
-﻿html {
-  font-size: 14px;
+﻿/* ============================================
+   ZÁKLADNÍ LAYOUT
+   ============================================ */
+
+html {
+    font-size: 14px;
+    height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
-/* Logo v navigaci */
-.navbar-brand img {
-    color: white; /* Barva pro SVG s currentColor */
+main {
+    flex: 1 0 auto;
 }
 
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+footer {
+    flex-shrink: 0;
 }
 
 /* ============================================
-   PACKAGE HISTORY TIMELINE (MINIMALISTICKÝ)
+   HOME PAGE - Hero sekce
+   ============================================ */
+
+.hero-section {
+    padding: 60px 0 80px 0;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+}
+
+.hero-logo {
+    width: 350px;
+    height: auto;
+    opacity: 0.15;
+    filter: brightness(0) invert(1);
+}
+
+/* ============================================
+   HOME PAGE - Hlavní karty
+   ============================================ */
+
+.main-cards-container {
+    margin-top: -50px;
+    margin-bottom: 100px;
+}
+
+.home-card-send:hover,
+.home-card-track:hover {
+    transform: translateY(-10px);
+    transition: transform 0.3s ease;
+}
+
+.card-image {
+    height: 350px;
+    object-fit: contain;
+    padding: 30px;
+}
+
+.home-card-send .card-img-top {
+    background: linear-gradient(135deg, rgba(83, 114, 128, 0.9) 0%, rgba(106, 135, 150, 0.9) 100%);
+}
+
+.home-card-track .card-img-top {
+    background: linear-gradient(135deg, rgba(232, 168, 124, 0.9) 0%, rgba(227, 149, 99, 0.9) 100%);
+}
+
+.track-title {
+    color: #E8A87C;
+}
+
+/* ============================================
+   HOME PAGE - Info karty ("Proč si vybrat nás?")
+   ============================================ */
+
+.info-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .info-icon.warning {
+        background: rgba(232, 168, 124, 0.15);
+        color: #E8A87C;
+    }
+
+    .info-icon.success {
+        background: rgba(107, 183, 123, 0.15);
+        color: #6BB77B;
+    }
+
+    .info-icon.primary {
+        background: rgba(83, 114, 128, 0.15);
+        color: #537280;
+    }
+
+/* ============================================
+   HOME PAGE - Kroužky ("Jak to funguje?")
+   ============================================ */
+
+.step-circle {
+    width: 90px;
+    height: 90px;
+}
+
+.step-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+/* ============================================
+   TIMELINE (Detail zásilky)
    ============================================ */
 
 .package-timeline {
@@ -55,7 +141,6 @@ body {
         padding-bottom: 0;
     }
 
-    /* Svislá čára - VŠECHNY ŠEDÉ */
     .timeline-item::before {
         content: '';
         position: absolute;
@@ -70,7 +155,6 @@ body {
         display: none;
     }
 
-/* Bublina (kruh) - BEZ IKON, BEZ OHRANIČENÍ */
 .timeline-badge {
     position: absolute;
     left: 0;
@@ -81,56 +165,44 @@ body {
     z-index: 10;
 }
 
-    /* Dokončené stavy - světle zelená */
     .timeline-badge.completed {
         background-color: #d4edda;
     }
 
-    /* Aktuální stav - výrazná zelená */
     .timeline-badge.current {
         background-color: #28a745;
     }
 
-    /* Nedosažené stavy - šedá */
     .timeline-badge.future {
         background-color: #e9ecef;
     }
 
-    /* Reklamováno - oranžová */
     .timeline-badge.reclaimed {
         background-color: #ff6b35;
     }
 
-/* Obsah - BEZ KARTY, jenom text */
 .timeline-content {
     padding: 0;
-    background: none;
-    border: none;
 }
 
 .timeline-title {
     font-size: 15px;
     font-weight: 600;
     margin-bottom: 2px;
-    color: #212529;
 }
 
-/* Proběhlé stavy - světle zelený nadpis */
 .timeline-item.completed .timeline-title {
-    color:#6c757d ;
+    color: #6c757d;
 }
 
-/*  Aktuální stav - výrazně zelený nadpis */
 .timeline-item.current .timeline-title {
     color: #28a745;
 }
 
-/* Reklamováno - oranžový nadpis */
 .timeline-item.reclaimed .timeline-title {
     color: #ff6b35;
 }
 
-/* Nedosažené stavy - šedý nadpis */
 .timeline-item.future .timeline-title {
     color: #6c757d;
 }
@@ -138,40 +210,4 @@ body {
 .timeline-date {
     font-size: 13px;
     color: #6c757d;
-}
-
-/* ============================================
-   HOME PAGE - Hover efekt pro karty
-   ============================================ */
-
-.hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}
-
-    .hover-lift:hover {
-        transform: translateY(-10px) !important;
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3) !important;
-    }
-
-/* ============================================
-   STICKY FOOTER - vždy na dně stránky
-   ============================================ */
-
-html {
-    height: 100%;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
-footer {
-    flex-shrink: 0;
 }

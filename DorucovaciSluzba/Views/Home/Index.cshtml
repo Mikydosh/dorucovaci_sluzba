@@ -3,33 +3,39 @@
 }
 
 <!-- HERO SEKCE -->
-<div class="bg-primary text-white py-5 rounded">
-    <div class="container">
-        <div class="row align-items-center py-5">
-            <div class="col-12 text-center mb-5">
-                <h1 class="display-3 fw-bold mb-3">Rychlé a spolehlivé doručení</h1>
-                <p class="lead mb-0">
+<div class="bg-primary text-white position-relative overflow-hidden rounded-4 hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-center text-lg-start mb-3 mb-lg-0 ps-lg-5">
+                <h1 class="display-4 fw-bold mb-3 lh-sm">
+                    Rychlé a spolehlivé<br />
+                    doručení po celé ČR
+                </h1>
+                <p class="lead mb-0 opacity-75 hero-subtitle">
                     Odesílejte a sledujte své zásilky s naší moderní doručovací službou.
-                    Máte své balíky pod kontrolou 24/7.
                 </p>
+            </div>
+            <div class="col-lg-5 text-center">
+                <img src="~/images/logo.svg" alt="Logo" class="hero-logo" />
             </div>
         </div>
     </div>
 </div>
 
-<!-- HLAVNÍ AKČNÍ KARTY S OBRÁZKY -->
-<div class="container" style="margin-top: -80px; margin-bottom: 100px;">
+<!-- HLAVNÍ AKČNÍ KARTY -->
+<div class="container main-cards-container">
     <div class="row justify-content-center g-4">
         <!-- ODESLAT ZÁSILKU -->
         <div class="col-md-5">
-            <div class="card shadow-lg h-100 border-0 hover-lift">
-                <img src="~/images/send-package.png"
-                     class="card-img-top"
-                     alt="Odeslat zásilku"
-                     style="height: 300px; object-fit: contain; padding: 20px;" />
+            <div class="card border-0 shadow h-100 rounded-4 home-card-send">
+                <div class="position-relative">
+                    <img src="~/images/send-package.png"
+                         class="card-img-top rounded-top-4 card-image"
+                         alt="Odeslat zásilku" />
+                </div>
                 <div class="card-body text-center p-4">
-                    <h3 class="card-title mb-3">
-                        <i class="fas fa-paper-plane text-primary me-2"></i>
+                    <h3 class="card-title mb-3 fw-bold text-primary">
+                        <i class="fas fa-paper-plane me-2"></i>
                         Odeslat zásilku
                     </h3>
                     <p class="card-text text-muted mb-4">
@@ -45,21 +51,22 @@
 
         <!-- SLEDOVAT ZÁSILKU -->
         <div class="col-md-5">
-            <div class="card shadow-lg h-100 border-0 hover-lift">
-                <img src="~/images/track-package.png"
-                     class="card-img-top"
-                     alt="Sledovat zásilku"
-                     style="height: 300px; object-fit: contain; padding: 20px;" />
+            <div class="card border-0 shadow h-100 rounded-4 home-card-track">
+                <div class="position-relative">
+                    <img src="~/images/track-package.png"
+                         class="card-img-top rounded-top-4 card-image"
+                         alt="Sledovat zásilku" />
+                </div>
                 <div class="card-body text-center p-4">
-                    <h3 class="card-title mb-3">
-                        <i class="fas fa-search text-success me-2"></i>
+                    <h3 class="card-title mb-3 fw-bold track-title">
+                        <i class="fas fa-search me-2"></i>
                         Sledovat zásilku
                     </h3>
                     <p class="card-text text-muted mb-4">
                         Sledujte stav vaší zásilky online v reálném čase pomocí sledovacího čísla.
                     </p>
                     <a asp-area="Admin" asp-controller="Package" asp-action="Track"
-                       class="btn btn-success btn-lg w-100">
+                       class="btn btn-warning btn-lg w-100">
                         Vyhledat zásilku
                     </a>
                 </div>
@@ -68,17 +75,17 @@
     </div>
 </div>
 
-<!-- INFO SEKCE - 3 VÝHODY -->
-<div class="container my-5 py-5">
-    <h2 class="text-center mb-5">Proč si vybrat nás?</h2>
+<!-- PROČ SI VYBRAT NÁS? -->
+<div class="container my-5 py-4">
+    <h2 class="text-center mb-5 fw-bold">Proč si vybrat nás?</h2>
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 text-center p-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-bolt fa-3x text-warning"></i>
+                    <div class="info-icon warning mb-4">
+                        <i class="fas fa-bolt fa-2x"></i>
                     </div>
-                    <h4 class="card-title mb-3">Rychlé doručení</h4>
+                    <h4 class="card-title mb-3 fw-bold">Rychlé doručení</h4>
                     <p class="card-text text-muted">
                         Doručujeme zásilky v nejkratším možném čase.
                         Většina zásilek je doručena do 24 hodin.
@@ -88,12 +95,12 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 text-center p-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-shield-alt fa-3x text-success"></i>
+                    <div class="info-icon success mb-4">
+                        <i class="fas fa-shield-alt fa-2x"></i>
                     </div>
-                    <h4 class="card-title mb-3">Bezpečné</h4>
+                    <h4 class="card-title mb-3 fw-bold">Bezpečné</h4>
                     <p class="card-text text-muted">
                         Vaše zásilky jsou v bezpečí. Každý balík je pojištěn
                         a sledován po celou dobu přepravy.
@@ -103,12 +110,12 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 text-center p-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-map-marked-alt fa-3x text-primary"></i>
+                    <div class="info-icon primary mb-4">
+                        <i class="fas fa-map-marked-alt fa-2x"></i>
                     </div>
-                    <h4 class="card-title mb-3">Sledovatelné online</h4>
+                    <h4 class="card-title mb-3 fw-bold">Sledovatelné online</h4>
                     <p class="card-text text-muted">
                         Sledujte svou zásilku v reálném čase. Víte přesně,
                         kde se váš balík nachází.
@@ -120,18 +127,15 @@
 </div>
 
 <!-- JAK TO FUNGUJE -->
-<div class="bg-light py-5 rounded">
-    <div class="container my-5">
-        <h2 class="text-center mb-5">Jak to funguje?</h2>
+<div class="bg-light py-5 rounded-4">
+    <div class="container my-4">
+        <h2 class="text-center mb-5 fw-bold">Jak to funguje?</h2>
         <div class="row g-4">
             <div class="col-md-4 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
-                         style="width: 80px; height: 80px;">
-                        <span class="fs-1 fw-bold">1</span>
-                    </div>
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white shadow mb-4 step-circle">
+                    <span class="step-number">1</span>
                 </div>
-                <h4 class="mb-3">Vytvořte zásilku</h4>
+                <h4 class="mb-3 fw-bold">Vytvořte zásilku</h4>
                 <p class="text-muted">
                     Vyplňte jednoduchý formulář s údaji
                     odesílatele a příjemce.
@@ -139,13 +143,10 @@
             </div>
 
             <div class="col-md-4 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
-                         style="width: 80px; height: 80px;">
-                        <span class="fs-1 fw-bold">2</span>
-                    </div>
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white shadow mb-4 step-circle">
+                    <span class="step-number">2</span>
                 </div>
-                <h4 class="mb-3">Předejte kurýrovi</h4>
+                <h4 class="mb-3 fw-bold">Předejte kurýrovi</h4>
                 <p class="text-muted">
                     Náš kurýr si zásilku vyzvedne na vámi
                     zvolené adrese.
@@ -153,13 +154,10 @@
             </div>
 
             <div class="col-md-4 text-center">
-                <div class="mb-3">
-                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
-                         style="width: 80px; height: 80px;">
-                        <span class="fs-1 fw-bold">3</span>
-                    </div>
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success text-white shadow mb-4 step-circle">
+                    <span class="step-number">3</span>
                 </div>
-                <h4 class="mb-3">Sledujte doručení</h4>
+                <h4 class="mb-3 fw-bold">Sledujte doručení</h4>
                 <p class="text-muted">
                     Zásilku můžete sledovat online pomocí
                     sledovacího čísla.
