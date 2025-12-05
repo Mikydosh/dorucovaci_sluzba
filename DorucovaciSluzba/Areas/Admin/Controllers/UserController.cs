@@ -1,9 +1,11 @@
 ﻿using DorucovaciSluzba.Domain.Enums;
+using DorucovaciSluzba.Infrastructure.Database;
 using DorucovaciSluzba.Infrastructure.Identity;
 using DorucovaciSluzba.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DorucovaciSluzba.Areas.Admin.Controllers
 {
@@ -13,15 +15,17 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
+        private readonly AppDbContext _dbContext;
 
-        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager)
+        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, AppDbContext dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _dbContext = dbContext;
         }
 
         // Výpis všech uživatelů
-        public async Task<IActionResult> Select(string? sortBy = null, string? sortOrder = null, string? search = null)
+        public async Task<IActionResult> Select(string? sortBy = null, string? sortOrder = null, string? search = null, string? roleFilter = null)
         {
             var users = _userManager.Users.ToList();
 
@@ -33,6 +37,15 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 userRoles[user.Id] = roles;
             }
 
+            // Filtrování podle role
+            if (!string.IsNullOrWhiteSpace(roleFilter))
+            {
+                users = users.Where(u =>
+                    userRoles.ContainsKey(u.Id) &&
+                    userRoles[u.Id].Any(r => r.Equals(roleFilter, StringComparison.OrdinalIgnoreCase))
+                ).ToList();
+            }
+
             // Vyhledávání
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -40,14 +53,15 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 users = users.Where(u =>
                     (u.FirstName != null && u.FirstName.ToLower().Contains(search)) ||
                     (u.LastName != null && u.LastName.ToLower().Contains(search)) ||
-                    (u.Email != null && u.Email.ToLower().Contains(search)) ||
+                    // ignorovat e-mail, pokud je aplikován filtr podle role
+                    (string.IsNullOrWhiteSpace(roleFilter) && u.Email != null && u.Email.ToLower().Contains(search)) ||
                     (u.UserName != null && u.UserName.ToLower().Contains(search)) ||
                     (u.Telefon != null && u.Telefon.Contains(search)) ||
                     (u.Mesto != null && u.Mesto.ToLower().Contains(search)) ||
                     (u.Ulice != null && u.Ulice.ToLower().Contains(search)) ||
                     (u.Psc != null && u.Psc.Contains(search)) ||
-                    // ✅ PŘIDÁNO: Hledání v rolích
-                    (userRoles.ContainsKey(u.Id) && userRoles[u.Id].Any(r => r.ToLower().Contains(search)))
+                    // Hledání v rolích pouze pokud není aplikován filtr podle role
+                    (string.IsNullOrWhiteSpace(roleFilter) && userRoles.ContainsKey(u.Id) && userRoles[u.Id].Any(r => r.ToLower().Contains(search)))
                 ).ToList();
             }
 
@@ -80,6 +94,8 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             ViewBag.CurrentSort = sortBy;
             ViewBag.CurrentOrder = sortOrder ?? "asc";
             ViewBag.CurrentSearch = search ?? "";
+            ViewBag.RoleFilter = roleFilter ?? "";
+            ViewBag.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
 
             return View(users);
         }
@@ -185,7 +201,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 await _userManager.AddToRoleAsync(user, selectedRole.Name!);
             }
 
-            TempData["SuccessMessage"] = $"Uživatel {user.FirstName} {user.LastName} byl úspěšně aktualizován!";
+            TempData["UserSuccessMessage"] = $"Uživatel {user.FirstName} {user.LastName} byl úspěšně aktualizován!";
             return RedirectToAction(nameof(Select));
         }
 
@@ -198,13 +214,27 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var result = await _userManager.DeleteAsync(user);
-            if (result.Succeeded)
+            // Kontrola, zda uživatel nemá přiřazené zásilky
+            var hasPackages = await _dbContext.Zasilky
+                .AnyAsync(z => z.OdesilatelId == id ||
+                               z.PrijemceId == id ||
+                               z.KuryrId == id);
+
+            if (hasPackages)
             {
+                TempData["UserErrorMessage"] = "Uživatel nemůže být smazán, protože má přiřazené zásilky. Nejprve odstraňte vazby na zásilky nebo je přiřaďte jinému uživateli.";
                 return RedirectToAction(nameof(Select));
             }
 
-            return BadRequest("Nepodařilo se smazat uživatele.");
+            // smazání uživatele
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["UserSuccessMessage"] = "Uživatel byl úspěšně smazán.";
+                return RedirectToAction(nameof(Select));
+            }
+
+            return RedirectToAction(nameof(Select));
         }
     }
 }

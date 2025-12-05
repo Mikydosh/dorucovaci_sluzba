@@ -23,7 +23,7 @@ namespace DorucovaciSluzba.Areas.Delivery.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? sortBy = null, string? sortOrder = null)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -31,7 +31,23 @@ namespace DorucovaciSluzba.Areas.Delivery.Controllers
                 return RedirectToAction("Login", "Account", new { area = "Security" });
             }
 
-            var zasilky = _packageAppService.SelectForKuryr(user.Id);
+            var zasilky = _packageAppService.SelectForKuryr(user.Id).ToList();
+
+            // ŘAZENÍ
+            sortBy = sortBy?.ToLower() ?? "cislo";
+            zasilky = (sortBy, sortOrder?.ToLower()) switch
+            {
+                ("cislo", "desc") => zasilky.OrderByDescending(z => z.Cislo).ToList(),
+                ("cislo", _) => zasilky.OrderBy(z => z.Cislo).ToList(),
+                ("datum", "desc") => zasilky.OrderByDescending(z => z.DatumOdeslani).ToList(),
+                ("datum", _) => zasilky.OrderBy(z => z.DatumOdeslani).ToList(),
+                ("stav", "desc") => zasilky.OrderByDescending(z => z.Stav?.Stav).ToList(),
+                ("stav", _) => zasilky.OrderBy(z => z.Stav?.Stav).ToList(),
+                _ => zasilky.OrderBy(z => z.Cislo).ToList()
+            };
+
+            ViewBag.CurrentSort = sortBy;
+            ViewBag.CurrentOrder = sortOrder ?? "asc";
 
             return View(zasilky);
         }
