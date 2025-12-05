@@ -3,31 +3,47 @@
 Webová aplikace pro správu a sledování zásilek vytvořená v **ASP.NET Core MVC** s **Entity Framework Core** a **MySQL** databází. Design stránky pomocí **Bootstrap**, vlastního **CSS** a obrázky + logo v **Adobe Illustrator**.
 
 ---
-## Screenshoty
+## 📷 Screenshoty
 **Hlavní stránka**
-<img width="1849" height="989" alt="Hlavní stránka" src="https://github.com/user-attachments/assets/fb2a73f0-4931-4268-9561-aca29bf1b50b" />
+<img width="800" alt="Hlavní stránka" src="https://github.com/user-attachments/assets/fb2a73f0-4931-4268-9561-aca29bf1b50b" />
+
+---
 
 **Správa zásilek**
-<img width="1167" height="711" alt="Správa zásilek" src="https://github.com/user-attachments/assets/201c250b-d409-4a25-a8bf-cb04f5339aca" />
+<img width="800" alt="Správa zásilek" src="https://github.com/user-attachments/assets/201c250b-d409-4a25-a8bf-cb04f5339aca" />
+
+---
 
 **Detail zásilky**
-<img width="1014" height="1145" alt="Detail zásilky" src="https://github.com/user-attachments/assets/e81de936-3d1e-4ea4-a912-fc0396f1d0b2" />
+<img width="800" alt="Detail zásilky" src="https://github.com/user-attachments/assets/e81de936-3d1e-4ea4-a912-fc0396f1d0b2" />
+
+---
 
 **Panel kurýra**
-<img width="1192" height="594" alt="Panel kurýra" src="https://github.com/user-attachments/assets/fe850b7d-0cad-41c5-a035-3e47c3a0ccbb" />
+<img width="800" alt="Panel kurýra" src="https://github.com/user-attachments/assets/fe850b7d-0cad-41c5-a035-3e47c3a0ccbb" />
+
+---
 
 **Panel uživatele**
-<img width="1211" height="592" alt="Panel uživatele" src="https://github.com/user-attachments/assets/dd75d4bb-5aab-4d10-af22-f0f07ca3cf8e" />
+<img width="800" alt="Panel uživatele" src="https://github.com/user-attachments/assets/dd75d4bb-5aab-4d10-af22-f0f07ca3cf8e" />
+
+---
+
 
 **Formuláře**
-<img width="848" height="1117" alt="Vytvoření zásilky" src="https://github.com/user-attachments/assets/19b6764e-f5ed-4589-93ec-42a4abb762b3" />
-<img width="694" height="562" alt="Sledování zásilky" src="https://github.com/user-attachments/assets/1bb704cc-e633-4c7d-963f-6a1649742cfe" />
-<img width="553" height="510" alt="Login" src="https://github.com/user-attachments/assets/32ebc2d4-7a0c-49cf-a063-7159200831cd" />
+<img width="600" alt="Vytvoření zásilky" src="https://github.com/user-attachments/assets/19b6764e-f5ed-4589-93ec-42a4abb762b3" />
+
+---
+
+<img width="450" height="562" alt="Sledování zásilky" src="https://github.com/user-attachments/assets/1bb704cc-e633-4c7d-963f-6a1649742cfe" />
+
+---
+
+<img width="400" height="510" alt="Login" src="https://github.com/user-attachments/assets/32ebc2d4-7a0c-49cf-a063-7159200831cd" />
 
 a další...
 
-
-
+---
 
 ## 🎯 O projektu
 
