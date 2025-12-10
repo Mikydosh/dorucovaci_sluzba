@@ -1,10 +1,9 @@
 ﻿using DorucovaciSluzba.Domain.Entities;
-using DorucovaciSluzba.Infrastructure.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace DorucovaciSluzba.Models.Package
 {
-    public class EditUserViewModel
+    public class EditZasilkaViewModel
     {
         public int Id { get; set; }
 

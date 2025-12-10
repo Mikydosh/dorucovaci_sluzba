@@ -1,4 +1,4 @@
-﻿@model DorucovaciSluzba.Models.Package.EditUserViewModel
+﻿@model DorucovaciSluzba.Models.Package.EditZasilkaViewModel
 
 @{
     ViewData["Title"] = "Úprava zásilky";
@@ -27,7 +27,7 @@
                     <!-- LEVÁ STRANA - INFORMACE O ZÁSILCE (readonly) -->
                     <div class="col-md-6">
                         <div class="card border-0 shadow rounded-4 h-100">
-                            <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #537280 0%, #6a8796 100%);">
+                            <div class="card-header text-white py-3 rounded-top-4 bg-primary">
                                 <h4 class="mb-0 fw-bold">
                                     <i class="fas fa-info-circle me-2"></i>Informace o zásilce
                                 </h4>
@@ -75,7 +75,7 @@
                     <div class="col-md-6">
                         <!-- STAV ZÁSILKY -->
                         <div class="card border-0 shadow rounded-4 mb-4">
-                            <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #E8A87C 0%, #e39563 100%);">
+                            <div class="card-header text-white py-3 rounded-top-4 bg-warning">
                                 <h4 class="mb-0 fw-bold">
                                     <i class="fas fa-sync-alt me-2"></i>Stav zásilky
                                 </h4>
@@ -105,7 +105,7 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Podpora"))
                         {
                             <div class="card border-0 shadow rounded-4">
-                                <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #6BB77B 0%, #5ca569 100%);">
+                                <div class="card-header text-white py-3 rounded-top-4 bg-success">
                                     <h4 class="mb-0 fw-bold">
                                         <i class="fas fa-user-tie me-2"></i>Přiřazení kurýra
                                     </h4>

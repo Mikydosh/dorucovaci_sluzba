@@ -4,6 +4,7 @@
     var odesilatel = ViewBag.Odesilatel as DorucovaciSluzba.Infrastructure.Identity.User;
     var prijemce = ViewBag.Prijemce as DorucovaciSluzba.Infrastructure.Identity.User;
     var kuryr = ViewBag.Kuryr as DorucovaciSluzba.Infrastructure.Identity.User;
+    var isRecipient = ViewBag.IsRecipient as bool? ?? false;
 }
 
 <div class="container mt-5 mb-5">
@@ -194,6 +195,18 @@
                 <!-- FOOTER S TLAČÍTKY -->
                 <div class="card-footer bg-light text-center py-4 border-0 rounded-bottom-4">
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <!-- Tlačítko pro změnu adresy - pro příjemce -->
+                        @if (ViewBag.IsRecipient == true && Model.Stav?.Id != 3)
+                        {
+                            <a asp-area="Admin"
+                               asp-controller="Package"
+                               asp-action="ChangeAddress"
+                               asp-route-id="@Model.Id"
+                               class="btn btn-success btn-lg px-4">
+                                <i class="fas fa-map-marker-alt me-2"></i>Změnit adresu doručení
+                            </a>
+                        }
+
                         <a asp-action="Track" class="btn btn-primary btn-lg px-4">
                             <i class="fas fa-search me-2"></i>Vyhledat jinou zásilku
                         </a>

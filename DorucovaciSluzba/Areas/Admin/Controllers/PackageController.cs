@@ -7,7 +7,6 @@ using DorucovaciSluzba.Models.Package;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
 namespace DorucovaciSluzba.Areas.Admin.Controllers
 {
@@ -186,9 +185,6 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
         }
 
-        
-
-
         [HttpGet]
         [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
         public async Task<IActionResult> Edit(int id, string? returnUrl = null)
@@ -200,11 +196,21 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // NOVÉ: Načti uživatele
+            // Kontrola oprávnění pro kurýra
+            if (User.IsInRole(nameof(Roles.Kuryr)))
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser == null || zasilka.KuryrId != currentUser.Id)
+                {
+                    return Forbid();
+                }
+            }
+
+            // Načti uživatele
             var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
             var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
 
-            var viewModel = new EditUserViewModel
+            var viewModel = new EditZasilkaViewModel
             {
                 Id = zasilka.Id,
                 Cislo = zasilka.Cislo,
@@ -221,14 +227,14 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             };
 
             ViewBag.ReturnUrl = returnUrl;
-
+            
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
-        public IActionResult Edit(EditUserViewModel model, string? returnUrl = null)
+        public IActionResult Edit(EditZasilkaViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -340,6 +346,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                     HttpContext.Session.SetObject("AuthorizedPackages", authorizedPackages);
                 }
 
+                // Ulož email do session pro ověření příjemce
+                HttpContext.Session.SetString($"PackageEmail_{zasilka.Id}", model.Email);
+
                 return RedirectToAction("Detail", new { id = zasilka.Id });
             }
             catch (Exception ex)
@@ -433,7 +442,170 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             ViewBag.Historie = historie;
             ViewBag.VsechnyStavy = vsechnyStavy;
 
+            // Zkontroluj, jestli je to příjemce (buď přihlášený nebo přes Track)
+            bool isPrijemce = false;
+
+            // 1. Je přihlášený jako příjemce?
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var currentUserForButton = await _userManager.GetUserAsync(User);
+                if (currentUserForButton != null && zasilka.PrijemceId == currentUserForButton.Id)
+                {
+                    isPrijemce = true;
+                }
+            }
+            // 2. Přišel přes Track a zadal email příjemce?
+            else
+            {
+                var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
+                if (authorizedPackages != null && authorizedPackages.Contains(id))
+                {
+                    // Zkontroluj, jestli email v session odpovídá příjemci
+                    var trackedEmail = HttpContext.Session.GetString($"PackageEmail_{id}");
+                    if (!string.IsNullOrEmpty(trackedEmail) &&
+                        prijemce?.Email != null &&
+                        trackedEmail.Equals(prijemce.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        isPrijemce = true;
+                    }
+                }
+            }
+
+            ViewBag.IsRecipient = isPrijemce;
+
+
             return View(zasilka);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangeAddress(int id)
+        {
+            var zasilka = _packageAppService.GetById(id);
+
+            if (zasilka == null)
+            {
+                return NotFound();
+            }
+
+            // Ověření, že má uživatel oprávnění
+            bool isAuthorized = false;
+
+            // 1. Přihlášený příjemce s rolí Uzivatel
+            if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(nameof(Roles.Uzivatel)))
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser != null && zasilka.PrijemceId == currentUser.Id)
+                {
+                    isAuthorized = true;
+                }
+            }
+            // 2. Nepřihlášený uživatel, který přišel přes Track s emailem příjemce
+            else
+            {
+                var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
+                var trackedEmail = HttpContext.Session.GetString($"PackageEmail_{id}");
+
+                if (authorizedPackages != null && authorizedPackages.Contains(id) && !string.IsNullOrEmpty(trackedEmail))
+                {
+                    var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+                    if (prijemce != null && trackedEmail.Equals(prijemce.Email, StringComparison.OrdinalIgnoreCase))
+                    {
+                        isAuthorized = true;
+                    }
+                }
+            }
+
+            if (!isAuthorized)
+            {
+                return RedirectToAction("Track");
+            }
+
+            // Načti příjemce pro zobrazení
+            var prijemceUser = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+
+            var viewModel = new ChangeAddressViewModel
+            {
+                ZasilkaId = zasilka.Id,
+                Cislo = zasilka.Cislo,
+                DestinaceUlice = zasilka.DestinaceUlice,
+                DestinaceCP = zasilka.DestinaceCP,
+                DestinaceMesto = zasilka.DestinaceMesto,
+                DestinacePsc = zasilka.DestinacePsc,
+                PrijemceJmeno = $"{prijemceUser?.FirstName} {prijemceUser?.LastName}",
+                DatumOdeslani = zasilka.DatumOdeslani
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangeAddress(ChangeAddressViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                var zasilka = _packageAppService.GetById(model.ZasilkaId);
+
+                if (zasilka == null)
+                {
+                    return NotFound();
+                }
+
+                // Stejné ověření jako v GET
+                bool isAuthorized = false;
+
+                if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(nameof(Roles.Uzivatel)))
+                {
+                    var currentUser = await _userManager.GetUserAsync(User);
+                    if (currentUser != null && zasilka.PrijemceId == currentUser.Id)
+                    {
+                        isAuthorized = true;
+                    }
+                }
+                else
+                {
+                    var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
+                    var trackedEmail = HttpContext.Session.GetString($"PackageEmail_{model.ZasilkaId}");
+
+                    if (authorizedPackages != null && authorizedPackages.Contains(model.ZasilkaId) && !string.IsNullOrEmpty(trackedEmail))
+                    {
+                        var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
+                        if (prijemce != null && trackedEmail.Equals(prijemce.Email, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isAuthorized = true;
+                        }
+                    }
+                }
+
+                if (!isAuthorized)
+                {
+                    return RedirectToAction("Track");
+                }
+
+                // Aktualizuj adresu
+                _packageAppService.UpdateAddress(
+                    model.ZasilkaId,
+                    model.DestinaceUlice,
+                    model.DestinaceCP,
+                    model.DestinaceMesto,
+                    model.DestinacePsc
+                );
+
+                TempData["SuccessMessage"] = "Adresa doručení byla úspěšně změněna!";
+                return RedirectToAction("Detail", new { id = model.ZasilkaId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Chyba při změně adresy: {ex.Message}");
+                return View(model);
+            }
         }
 
         // ========================================

@@ -96,6 +96,23 @@ namespace DorucovaciSluzba.Application.Implementation
             _dbContext.SaveChanges();
         }
 
+        public void UpdateAddress(int zasilkaId, string ulice, string cp, string mesto, string psc)
+        {
+            var zasilka = _dbContext.Set<Zasilka>().Find(zasilkaId);
+
+            if (zasilka == null)
+            {
+                throw new Exception("Zásilka nebyla nalezena.");
+            }
+
+            zasilka.DestinaceUlice = ulice;
+            zasilka.DestinaceCP = cp;
+            zasilka.DestinaceMesto = mesto;
+            zasilka.DestinacePsc = psc;
+
+            _dbContext.SaveChanges();
+        }
+
         public IList<StavZasilka> GetAllStates()
         {
             return _dbContext.Set<StavZasilka>()

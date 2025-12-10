@@ -14,6 +14,8 @@ namespace DorucovaciSluzba.Application.Abstraction
         Zasilka? GetById(int id);
         void Update(Zasilka zasilka);
 
+        void UpdateAddress(int zasilkaId, string ulice, string cp, string mesto, string psc);
+
         IList<StavZasilka> GetAllStates();
 
         IList<Zasilka> SelectForUser(int userId);

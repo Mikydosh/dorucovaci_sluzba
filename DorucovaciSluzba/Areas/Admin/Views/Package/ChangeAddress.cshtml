@@ -1,0 +1,126 @@
+﻿@model DorucovaciSluzba.Models.Package.ChangeAddressViewModel
+
+@{
+    ViewData["Title"] = "Změna adresy doručení";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- HLAVNÍ NADPIS -->
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-map-marker-alt text-success"></i>
+                    Změna adresy doručení
+                </h1>
+                <p class="text-muted lead">Upravte adresu, kam chcete zásilku doručit</p>
+            </div>
+
+            <form asp-action="ChangeAddress" method="post" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="ZasilkaId" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-4"></div>
+
+                <!-- INFO O ZÁSILCE -->
+                <div class="card border-0 shadow mb-4 rounded-4">
+                    <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #537280 0%, #6a8796 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle me-2"></i>Informace o zásilce
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small mb-1">
+                                    <i class="fas fa-barcode me-1"></i>Číslo zásilky
+                                </label>
+                                <p class="mb-0 fs-5 fw-bold text-primary">@Model.Cislo</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small mb-1">
+                                    <i class="fas fa-calendar-alt me-1"></i>Datum odeslání
+                                </label>
+                                <p class="mb-0">@Model.DatumOdeslani.ToString("dd.MM.yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold text-muted small mb-1">
+                                <i class="fas fa-user-check me-1"></i>Příjemce
+                            </label>
+                            <p class="mb-0">@Model.PrijemceJmeno</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NOVÁ ADRESA -->
+                <div class="card border-0 shadow mb-4 rounded-4">
+                    <div class="card-header text-white py-3 rounded-top-4" style="background: linear-gradient(135deg, #6BB77B 0%, #5ca569 100%);">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fas fa-map-marker-alt me-2"></i>Nová adresa doručení
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Ulice a CP -->
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <label asp-for="DestinaceUlice" class="form-label fw-semibold">
+                                    <i class="fas fa-road me-1 text-success"></i>
+                                    Ulice
+                                </label>
+                                <input asp-for="DestinaceUlice" class="form-control form-control-lg" placeholder="Např. Hlavní" />
+                                <span asp-validation-for="DestinaceUlice" class="text-danger small"></span>
+                            </div>
+                            <div class="col-4">
+                                <label asp-for="DestinaceCP" class="form-label fw-semibold">
+                                    <i class="fas fa-home me-1 text-success"></i>
+                                    Č.p.
+                                </label>
+                                <input asp-for="DestinaceCP" class="form-control form-control-lg" placeholder="123" />
+                                <span asp-validation-for="DestinaceCP" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Město a PSČ -->
+                        <div class="row">
+                            <div class="col-8">
+                                <label asp-for="DestinaceMesto" class="form-label fw-semibold">
+                                    <i class="fas fa-city me-1 text-success"></i>
+                                    Město
+                                </label>
+                                <input asp-for="DestinaceMesto" class="form-control form-control-lg" placeholder="Např. Praha" />
+                                <span asp-validation-for="DestinaceMesto" class="text-danger small"></span>
+                            </div>
+                            <div class="col-4">
+                                <label asp-for="DestinacePsc" class="form-label fw-semibold">
+                                    <i class="fas fa-mail-bulk me-1 text-success"></i>
+                                    PSČ
+                                </label>
+                                <input asp-for="DestinacePsc" class="form-control form-control-lg" placeholder="12345" maxlength="6" />
+                                <span asp-validation-for="DestinacePsc" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TLAČÍTKA -->
+                <div class="d-flex gap-3 justify-content-end mb-4">
+                    <a asp-area="Admin" asp-controller="Package" asp-action="Detail" asp-route-id="@Model.ZasilkaId"
+                       class="btn btn-secondary btn-lg px-5">
+                        <i class="fas fa-times me-2"></i>Zrušit
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg px-5">
+                        <i class="fas fa-save me-2"></i>Uložit novou adresu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/Validation/FirstLetterCZ.js"></script>
+    <script src="~/js/Validation/CpCZ.js"></script>
+    <script src="~/js/Validation/PscCZ.js"></script>
+}
