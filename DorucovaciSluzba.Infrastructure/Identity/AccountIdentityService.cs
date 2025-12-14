@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using DorucovaciSluzba.Application.Abstraction;
-using DorucovaciSluzba.Application.ViewModels;
+using DorucovaciSluzba.Application.DTOs;
 using DorucovaciSluzba.Domain.Enums;
 
 namespace DorucovaciSluzba.Infrastructure.Identity
@@ -16,9 +16,9 @@ namespace DorucovaciSluzba.Infrastructure.Identity
             _signInManager = signInManager;
         }
 
-        public async Task<bool> Login(LoginViewModel vm)
+        public async Task<bool> Login(LoginDto dto)
         {
-            var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, true, true);
+            var result = await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, true, true);
             return result.Succeeded;
         }
 
@@ -27,10 +27,10 @@ namespace DorucovaciSluzba.Infrastructure.Identity
             return _signInManager.SignOutAsync();
         }
 
-        public async Task<string[]> Register(RegisterViewModel vm, params Roles[] roles)
+        public async Task<string[]> Register(RegisterDto dto, params Roles[] roles)
         {
             // Zkontroluj, jestli uživatel s tímto emailem už existuje
-            var existingUser = await _userManager.FindByEmailAsync(vm.Email);
+            var existingUser = await _userManager.FindByEmailAsync(dto.Email);
 
             if (existingUser != null)
             {
@@ -40,10 +40,10 @@ namespace DorucovaciSluzba.Infrastructure.Identity
                 if (!hasPassword)
                 {
                     // Povyš anonymního uživatele na registrovaného
-                    existingUser.UserName = vm.Username;
-                    existingUser.FirstName = vm.FirstName;
-                    existingUser.LastName = vm.LastName;
-                    existingUser.PhoneNumber = vm.Phone;
+                    existingUser.UserName = dto.Username;
+                    existingUser.FirstName = dto.FirstName;
+                    existingUser.LastName = dto.LastName;
+                    existingUser.PhoneNumber = dto.Phone;
 
                     // Aktualizuj uživatele
                     var updateResult = await _userManager.UpdateAsync(existingUser);
@@ -53,7 +53,7 @@ namespace DorucovaciSluzba.Infrastructure.Identity
                     }
 
                     // Nastav heslo
-                    var addPasswordResult = await _userManager.AddPasswordAsync(existingUser, vm.Password);
+                    var addPasswordResult = await _userManager.AddPasswordAsync(existingUser, dto.Password);
                     if (!addPasswordResult.Succeeded)
                     {
                         return addPasswordResult.Errors.Select(e => e.Description).ToArray();
@@ -83,15 +83,15 @@ namespace DorucovaciSluzba.Infrastructure.Identity
 
             User user = new User()
             {
-                UserName = vm.Username,
-                FirstName = vm.FirstName,
-                LastName = vm.LastName,
-                Email = vm.Email,
-                PhoneNumber = vm.Phone
+                UserName = dto.Username,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                PhoneNumber = dto.Phone
             };
 
             string[] errors = null;
-            var result = await _userManager.CreateAsync(user, vm.Password);
+            var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
             {

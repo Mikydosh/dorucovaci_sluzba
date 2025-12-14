@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using DorucovaciSluzba.Application.Abstraction;
-using DorucovaciSluzba.Application.ViewModels;
+using DorucovaciSluzba.Application.DTOs;
 using DorucovaciSluzba.Infrastructure.Identity;
 
 namespace DorucovaciSluzba.Infrastructure.Identity
@@ -15,13 +15,13 @@ namespace DorucovaciSluzba.Infrastructure.Identity
             _userManager = userManager;
         }
 
-        public async Task<UserInfoViewModel?> FindUserByEmail(string email)
+        public async Task<UserDTO?> FindUserByEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             return user != null ? await MapToViewModel(user) : null;
         }
 
-        public async Task<UserInfoViewModel?> FindUserByUsername(string username)
+        public async Task<UserDTO?> FindUserByUsername(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             return user != null ? await MapToViewModel(user) : null;
@@ -36,18 +36,18 @@ namespace DorucovaciSluzba.Infrastructure.Identity
             return await _userManager.GetRolesAsync(user);
         }
 
-        public async Task<UserInfoViewModel?> GetCurrentUser(ClaimsPrincipal principal)
+        public async Task<UserDTO?> GetCurrentUser(ClaimsPrincipal principal)
         {
             var user = await _userManager.GetUserAsync(principal);
             return user != null ? await MapToViewModel(user) : null;
         }
 
         // Helper metoda pro mapování User -> UserInfoViewModel
-        private async Task<UserInfoViewModel> MapToViewModel(User user)
+        private async Task<UserDTO> MapToViewModel(User user)
         {
             var roles = await _userManager.GetRolesAsync(user);
 
-            return new UserInfoViewModel
+            return new UserDTO
             {
                 Id = user.Id,
                 Username = user.UserName ?? string.Empty,

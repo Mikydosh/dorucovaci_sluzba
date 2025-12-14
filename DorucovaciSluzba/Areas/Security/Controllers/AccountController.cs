@@ -1,8 +1,9 @@
 ﻿using DorucovaciSluzba.Application.Abstraction;
-using DorucovaciSluzba.Application.ViewModels;
+using DorucovaciSluzba.Application.DTOs;
 using DorucovaciSluzba.Controllers;
 using DorucovaciSluzba.Domain.Enums;
 using DorucovaciSluzba.Infrastructure.Identity;
+using DorucovaciSluzba.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,18 @@ namespace DorucovaciSluzba.Areas.Security.Controllers
         {
             if (ModelState.IsValid)
             {
-                string[] errors = await _accountService.Register(registerVM, Roles.Uzivatel);
+                // Mapování ViewModel → DTO
+                var registerDto = new RegisterDto
+                {
+                    Username = registerVM.Username,
+                    FirstName = registerVM.FirstName,
+                    LastName = registerVM.LastName,
+                    Email = registerVM.Email,
+                    Phone = registerVM.Phone,
+                    Password = registerVM.Password
+                };
+
+                string[] errors = await _accountService.Register(registerDto, Roles.Uzivatel);
 
                 if (errors == null)
                 {
@@ -77,7 +89,13 @@ namespace DorucovaciSluzba.Areas.Security.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool isLogged = await _accountService.Login(loginVM);
+                // Mapování ViewModel → DTO
+                var loginDto = new LoginDto
+                {
+                    Username = loginVM.Username,
+                    Password = loginVM.Password
+                };
+                bool isLogged = await _accountService.Login(loginDto);
                 if (isLogged)
                     return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), String.Empty), new { area = String.Empty });
 
