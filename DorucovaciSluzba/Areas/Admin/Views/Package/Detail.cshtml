@@ -55,6 +55,7 @@
 
                     <!-- 3 SLOUPCE: ODESÍLATEL | PŘÍJEMCE | KURÝR -->
                     <div class="row text-center mb-4 g-3">
+
                         <!-- ODESÍLATEL -->
                         <div class="col-md-4">
                             <div class="card border-0 shadow h-100 rounded-4">
@@ -149,6 +150,7 @@
                             .ToDictionary(g => g.Key, g => g.OrderByDescending(h => h.DatumZmeny).First())
                             ?? new Dictionary<int, DorucovaciSluzba.Domain.Entities.PackageHistoryItem>();
 
+                            <!-- Vytvoření časové osy pro každý stav zásilky -->
                             <div class="package-timeline">
                                 @for (int i = 0; i < vsechnyStavy.Count; i++)
                                 {
@@ -160,8 +162,11 @@
                                     bool isFuture = historyItem == null && !isCurrent;
                                     bool isReclaimed = stav.Stav.Contains("Reklamováno") && isCurrent;
 
+                                    // Vnořené podmínky pro určení CSS třídy -> reklamováno, aktuální, dokončené, budoucí
                                     var cssClass = isReclaimed ? "reclaimed" : (isCurrent ? "current" : (isCompleted ? "completed" : "future"));
 
+                                    // Vykreslení položky časové osy -> barevně odlišené podle stavu (zelená, světle zelená, šedá, červená)
+                                    // Bublina a text
                                     <div class="timeline-item @cssClass">
                                         <div class="timeline-badge @cssClass"></div>
                                         <div class="timeline-content">

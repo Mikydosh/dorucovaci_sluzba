@@ -1,4 +1,5 @@
 ﻿using DorucovaciSluzba.Application.Abstraction;
+using DorucovaciSluzba.Controllers;
 using DorucovaciSluzba.Domain.Entities;
 using DorucovaciSluzba.Domain.Enums;
 using DorucovaciSluzba.Extensions;
@@ -31,19 +32,20 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         // CHRÁNĚNÉ AKCE (pouze Admin a Podpora)
         // ========================================
 
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
-
+        // GET: Admin/Package/Select
+        [Authorize(Roles = "Admin, Podpora")]
         public async Task<IActionResult> Select(string? sortBy, string? sortOrder, string? search = null)
         {
             IList<Zasilka> packages = _packageAppService.Select(sortBy, sortOrder ?? "asc", null);
 
-            // NOVÉ: Načti všechny uživatele najednou (efektivnější než po jednom)
+            // Načti všechny uživatele najednou, kteří jsou spojeni se zásilkami
             var userIds = packages
                 .SelectMany(z => new[] { z.OdesilatelId, z.PrijemceId, z.KuryrId ?? 0 })
                 .Distinct()
                 .Where(id => id > 0)
                 .ToList();
 
+            // Načti uživatele do slovníku pro rychlý přístup
             var users = new Dictionary<int, User>();
             foreach (var id in userIds)
             {
@@ -106,13 +108,37 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(packages);
         }
 
+        // Vytvoření zásilky - kdokoliv
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            // Pokud je uživatel přihlášený, předvyplň jeho data
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+
+                if (currentUser != null)
+                {
+                    var model = new CreateZasilkaViewModel
+                    {
+                        OdesilatelJmeno = currentUser.FirstName ?? string.Empty,
+                        OdesilatelPrijmeni = currentUser.LastName ?? string.Empty,
+                        OdesilatelEmail = currentUser.Email ?? string.Empty,
+                        OdesilatelUlice = currentUser.Ulice ?? string.Empty,
+                        OdesilatelCP = currentUser.CP ?? string.Empty,
+                        OdesilatelMesto = currentUser.Mesto ?? string.Empty,
+                        OdesilatelPsc = currentUser.Psc ?? string.Empty
+                    };
+                    // Vrať předvyplněný formulář
+                    return View(model);
+                }
+            }
+            // Vrať prázdný formulář
             return View();
         }
 
+        // POST: Admin/Package/Create
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Create(CreateZasilkaViewModel model)
@@ -124,7 +150,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
             try
             {
-                // Najdi nebo vytvoř odesílatele
+                // Najdi nebo vytvoř odesílatele (podle toho, jestli existuje uživatel s daným emailem)
                 var odesilatel = await GetOrCreateUserAsync(
                     model.OdesilatelJmeno,
                     model.OdesilatelPrijmeni,
@@ -135,7 +161,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                     model.OdesilatelPsc
                 );
 
-                // Najdi nebo vytvoř příjemce
+                // Najdi nebo vytvoř příjemce (podle toho, jestli existuje uživatel s daným emailem)
                 var prijemce = await GetOrCreateUserAsync(
                     model.PrijemceJmeno,
                     model.PrijemcePrijmeni,
@@ -163,7 +189,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 // Zaloguj vytvoření zásilky (první stav)
                 _packageHistoryAppService.Create(zasilka.Id, zasilka.StavId);
 
-                return RedirectToAction(nameof(PackageController.Select));
+                return RedirectToAction(nameof(HomeController.Index));
             }
             catch (Exception)
             {
@@ -171,8 +197,8 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
         }
 
-
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora))]
+        // DELETE: Admin/Package/Delete/{id}
+        [Authorize(Roles = "Admin, Podpora")]
         public IActionResult Delete(int id)
         {
             bool deleted = _packageAppService.Delete(id);
@@ -185,8 +211,9 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
         }
 
+        // EDIT: Admin, Podpora, Kurýr (pouze své zásilky)
         [HttpGet]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
+        [Authorize(Roles = "Admin, Podpora, Kuryr")]
         public async Task<IActionResult> Edit(int id, string? returnUrl = null)
         {
             var zasilka = _packageAppService.GetById(id);
@@ -222,7 +249,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 KuryrId = zasilka.KuryrId,
                 DostupneStavy = _packageAppService.GetAllStates().ToList(),
 
-                // ZMĚNA: Načti kurýry z UserManager
+                // Načti kurýry z UserManager
                 DostupniKuryri = (await _userManager.GetUsersInRoleAsync("Kuryr")).ToList()
             };
 
@@ -231,11 +258,13 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        // POST: Admin/Package/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Podpora) + ", " + nameof(Roles.Kuryr))]
+        [Authorize(Roles = "Admin, Podpora, Kuryr")]
         public IActionResult Edit(EditZasilkaViewModel model, string? returnUrl = null)
         {
+            // Doplň dostupné stavy a kurýry
             if (!ModelState.IsValid)
             {
                 model.DostupneStavy = _packageAppService.GetAllStates().ToList();
@@ -295,6 +324,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         // VEŘEJNÉ AKCE (bez autorizace)
         // ========================================
 
+        // GET: Admin/Package/Track
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Track()
@@ -302,11 +332,13 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View();
         }
 
+        // POST: Admin/Package/Track
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> Track(TrackPackageViewModel model)
         {
+            // Validace modelu
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -314,10 +346,8 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
             try
             {
-                var zasilka = _packageAppService.FindByCisloAndEmail(
-                    model.CisloZasilky,
-                    model.Email
-                );
+                // Najdi zásilku podle čísla
+                var zasilka = _packageAppService.FindByCislo(model.CisloZasilky);
 
                 if (zasilka == null)
                 {
@@ -358,10 +388,12 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             }
         }
 
+        // GET: Admin/Package/Detail/{id}
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Detail(int id)
         {
+            // Načti zásilku
             var zasilka = _packageAppService.GetById(id);
 
             if (zasilka == null)
@@ -369,7 +401,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // KONTROLA OPRÁVNĚNÍ
+            // KONTROLA OPRÁVNĚNÍ, KDO MŮŽE VIDĚT DETAIL ZÁSILKY
             bool isAuthorized = false;
 
             // 1. Je uživatel přihlášený jako Admin nebo Podpora?
@@ -386,7 +418,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                     isAuthorized = true;
                 }
             }
-            // 3. Je uživatel běžný Uživatel a je odesílatel nebo příjemce?
+            // 3. Je uživatel běžný Uživatel a je odesílatel nebo příjemce? (přihlášený)
             else if (User.IsInRole(nameof(Roles.Uzivatel)))
             {
                 var currentUser = await _userManager.GetUserAsync(User);
@@ -416,21 +448,22 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             var odesilatel = await _userManager.FindByIdAsync(zasilka.OdesilatelId.ToString());
             var prijemce = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
             User? kuryr = null;
+
             if (zasilka.KuryrId.HasValue)
             {
                 kuryr = await _userManager.FindByIdAsync(zasilka.KuryrId.Value.ToString());
             }
 
-            // Načti historii zásilky
+            // Načti celou historii zásilky
             var historie = _packageHistoryAppService.GetHistoryForPackage(id);
 
-            // Načti všechny možné stavy
+            // Načti všechny možné stavy (1-4)
             var vsechnyStavy = _packageAppService.GetAllStates().OrderBy(s => s.Id).ToList();
-            var historieStavIds = historie.Select(h => h.StavId).ToHashSet();
+            var historieStavIds = historie.Select(h => h.StavId).ToHashSet(); // kolekce stavů bez duplicit
 
             // Filtruj stavy - zahrnuj jen ty, které:
             // 1. Jsou v historii NEBO
-            // 2. Nemají název "Reklamováno"
+            // 2. Nemají název "Reklamováno" - aby zásilky, které nebyly reklamovány, neviděly tento stav
             vsechnyStavy = vsechnyStavy
                 .Where(s => historieStavIds.Contains(s.Id) || !s.Stav.Contains("Reklamováno"))
                 .ToList();
@@ -442,6 +475,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             ViewBag.Historie = historie;
             ViewBag.VsechnyStavy = vsechnyStavy;
 
+            // Tlačítko pro změnu adresy - zobrazení pouze pro příjemce
             // Zkontroluj, jestli je to příjemce (buď přihlášený nebo přes Track)
             bool isPrijemce = false;
 
@@ -477,6 +511,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(zasilka);
         }
 
+        // GET: Admin/Package/ChangeAddress/{id}
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ChangeAddress(int id)
@@ -488,7 +523,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Ověření, že má uživatel oprávnění
+            // Ověření, že má uživatel oprávnění - pouze příjemce může měnit adresu (přihlášený nebo přes Track)
             bool isAuthorized = false;
 
             // 1. Přihlášený příjemce s rolí Uzivatel
@@ -524,6 +559,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             // Načti příjemce pro zobrazení
             var prijemceUser = await _userManager.FindByIdAsync(zasilka.PrijemceId.ToString());
 
+            // Naplň ViewModel
             var viewModel = new ChangeAddressViewModel
             {
                 ZasilkaId = zasilka.Id,
@@ -539,6 +575,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        // POST: Admin/Package/ChangeAddress
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
@@ -561,6 +598,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 // Stejné ověření jako v GET
                 bool isAuthorized = false;
 
+                // 1. Přihlášený příjemce s rolí Uzivatel
                 if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(nameof(Roles.Uzivatel)))
                 {
                     var currentUser = await _userManager.GetUserAsync(User);
@@ -569,6 +607,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                         isAuthorized = true;
                     }
                 }
+                // 2. Nepřihlášený uživatel, který přišel přes Track s emailem příjemce
                 else
                 {
                     var authorizedPackages = HttpContext.Session.GetObject<List<int>>("AuthorizedPackages");
@@ -612,6 +651,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         // HELPER METODY
         // ========================================
 
+        // Najde uživatele podle emailu nebo ho vytvoří
         private async Task<User> GetOrCreateUserAsync(
             string jmeno, string prijmeni, string email,
             string ulice, string cp, string mesto, string psc)
@@ -621,19 +661,6 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
 
             if (existujici != null)
             {
-                // Aktualizuj adresu, pokud se změnila
-                bool zmeneno = false;
-
-                if (existujici.Ulice != ulice) { existujici.Ulice = ulice; zmeneno = true; }
-                if (existujici.CP != cp) { existujici.CP = cp; zmeneno = true; }
-                if (existujici.Mesto != mesto) { existujici.Mesto = mesto; zmeneno = true; }
-                if (existujici.Psc != psc) { existujici.Psc = psc; zmeneno = true; }
-
-                if (zmeneno)
-                {
-                    await _userManager.UpdateAsync(existujici);
-                }
-
                 return existujici;
             }
 

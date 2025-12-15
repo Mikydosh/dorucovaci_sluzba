@@ -1,7 +1,6 @@
 /* ============================================
    FINÁLNÍ BAREVNÁ PALETA
    ============================================ */
-
 :root {
     --bs-primary: #537280;
     --bs-primary-rgb: 83, 114, 128;
@@ -17,9 +16,11 @@
     --bs-danger-rgb: 217, 107, 92;
 }
 
-/* Primary */
+/* ============================================
+   PRIMARY - Modrá (#537280)
+   ============================================ */
 .bg-primary {
-    background-color:  !important;
+    background-color: #537280 !important;
 }
 
 .text-primary {
@@ -32,9 +33,12 @@
     color: white;
 }
 
-    .btn-primary:hover {
-        background-color: #465f6b;
-        border-color: #465f6b;
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #435d6a !important;
+        border-color: #435d6a !important;
+        color: white !important;
     }
 
 .btn-outline-primary {
@@ -42,17 +46,21 @@
     border-color: #537280;
 }
 
-    .btn-outline-primary:hover {
-        background-color: #537280;
-        border-color: #537280;
-        color: white;
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active {
+        background-color: #537280 !important;
+        border-color: #537280 !important;
+        color: white !important;
     }
 
 .border-primary {
     border-color: #537280 !important;
 }
 
-/* Secondary */
+/* ============================================
+   SECONDARY - Svìtle modrá (#B8CDD9)
+   ============================================ */
 .bg-secondary {
     background-color: #B8CDD9 !important;
     color: #2d3748 !important;
@@ -68,16 +76,34 @@
     color: #2d3748;
 }
 
-    .btn-secondary:hover {
-        background-color: #a7c0cf;
-        border-color: #a7c0cf;
+    .btn-secondary:hover,
+    .btn-secondary:focus,
+    .btn-secondary:active {
+        background-color: #a3bcc9 !important;
+        border-color: #a3bcc9 !important;
+        color: #2d3748 !important;
+    }
+
+.btn-outline-secondary {
+    color: #B8CDD9;
+    border-color: #B8CDD9;
+}
+
+    .btn-outline-secondary:hover,
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:active {
+        background-color: #B8CDD9 !important;
+        border-color: #B8CDD9 !important;
+        color: #2d3748 !important;
     }
 
 .border-secondary {
     border-color: #B8CDD9 !important;
 }
 
-/* Success */
+/* ============================================
+   SUCCESS - Zelená (#6BB77B)
+   ============================================ */
 .bg-success {
     background-color: #6BB77B !important;
 }
@@ -92,16 +118,34 @@
     color: white;
 }
 
-    .btn-success:hover {
-        background-color: #5ca569;
-        border-color: #5ca569;
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+        background-color: #5a9f68 !important;
+        border-color: #5a9f68 !important;
+        color: white !important;
+    }
+
+.btn-outline-success {
+    color: #6BB77B;
+    border-color: #6BB77B;
+}
+
+    .btn-outline-success:hover,
+    .btn-outline-success:focus,
+    .btn-outline-success:active {
+        background-color: #6BB77B !important;
+        border-color: #6BB77B !important;
+        color: white !important;
     }
 
 .border-success {
     border-color: #6BB77B !important;
 }
 
-/* Info */
+/* ============================================
+   INFO - Béžová (#E5C89B)
+   ============================================ */
 .bg-info {
     background-color: #E5C89B !important;
     color: #2d3748 !important;
@@ -117,16 +161,34 @@
     color: #2d3748;
 }
 
-    .btn-info:hover {
-        background-color: #dfbc87;
-        border-color: #dfbc87;
+    .btn-info:hover,
+    .btn-info:focus,
+    .btn-info:active {
+        background-color: #dfbc87 !important;
+        border-color: #dfbc87 !important;
+        color: #2d3748 !important;
+    }
+
+.btn-outline-info {
+    color: #E5C89B;
+    border-color: #E5C89B;
+}
+
+    .btn-outline-info:hover,
+    .btn-outline-info:focus,
+    .btn-outline-info:active {
+        background-color: #E5C89B !important;
+        border-color: #E5C89B !important;
+        color: #2d3748 !important;
     }
 
 .border-info {
     border-color: #E5C89B !important;
 }
 
-/* Warning */
+/* ============================================
+   WARNING - Oranžová (#E8A87C)
+   ============================================ */
 .bg-warning {
     background-color: #E8A87C !important;
     color: white !important;
@@ -142,16 +204,34 @@
     color: white;
 }
 
-    .btn-warning:hover {
-        background-color: #e39563;
-        border-color: #e39563;
+    .btn-warning:hover,
+    .btn-warning:focus,
+    .btn-warning:active {
+        background-color: #d89563 !important;
+        border-color: #d89563 !important;
+        color: white !important;
+    }
+
+.btn-outline-warning {
+    color: #E8A87C;
+    border-color: #E8A87C;
+}
+
+    .btn-outline-warning:hover,
+    .btn-outline-warning:focus,
+    .btn-outline-warning:active {
+        background-color: #E8A87C !important;
+        border-color: #E8A87C !important;
+        color: white !important;
     }
 
 .border-warning {
     border-color: #E8A87C !important;
 }
 
-/* Danger */
+/* ============================================
+   DANGER - Èervená (#D96B5C)
+   ============================================ */
 .bg-danger {
     background-color: #D96B5C !important;
 }
@@ -166,11 +246,120 @@
     color: white;
 }
 
-    .btn-danger:hover {
-        background-color: #d1574a;
-        border-color: #d1574a;
+    .btn-danger:hover,
+    .btn-danger:focus,
+    .btn-danger:active {
+        background-color: #c7574a !important;
+        border-color: #c7574a !important;
+        color: white !important;
+    }
+
+.btn-outline-danger {
+    color: #D96B5C;
+    border-color: #D96B5C;
+}
+
+    .btn-outline-danger:hover,
+    .btn-outline-danger:focus,
+    .btn-outline-danger:active {
+        background-color: #D96B5C !important;
+        border-color: #D96B5C !important;
+        color: white !important;
     }
 
 .border-danger {
     border-color: #D96B5C !important;
+}
+
+/* ============================================
+   BADGE (Štítky) - Tvoje barvy
+   ============================================ */
+.badge.bg-primary {
+    background-color: #537280 !important;
+    color: white !important;
+}
+
+.badge.bg-secondary {
+    background-color: #B8CDD9 !important;
+    color: #2d3748 !important;
+}
+
+.badge.bg-success {
+    background-color: #6BB77B !important;
+    color: white !important;
+}
+
+.badge.bg-info {
+    background-color: #E5C89B !important;
+    color: #2d3748 !important;
+}
+
+.badge.bg-warning {
+    background-color: #E8A87C !important;
+    color: white !important;
+}
+
+.badge.bg-danger {
+    background-color: #D96B5C !important;
+    color: white !important;
+}
+
+/* ============================================
+   ALERT (Upozornìní) - Tvoje barvy
+   ============================================ */
+.alert-primary {
+    background-color: rgba(83, 114, 128, 0.15);
+    border-color: #537280;
+    color: #537280;
+}
+
+.alert-secondary {
+    background-color: rgba(184, 205, 217, 0.15);
+    border-color: #B8CDD9;
+    color: #2d3748;
+}
+
+.alert-success {
+    background-color: rgba(107, 183, 123, 0.15);
+    border-color: #6BB77B;
+    color: #6BB77B;
+}
+
+.alert-info {
+    background-color: rgba(229, 200, 155, 0.15);
+    border-color: #E5C89B;
+    color: #2d3748;
+}
+
+.alert-warning {
+    background-color: rgba(232, 168, 124, 0.15);
+    border-color: #E8A87C;
+    color: #E8A87C;
+}
+
+.alert-danger {
+    background-color: rgba(217, 107, 92, 0.15);
+    border-color: #D96B5C;
+    color: #D96B5C;
+}
+
+/* ============================================
+   FIX - Odstranìní outline pøi kliku
+   ============================================ */
+.btn:focus,
+.btn:active:focus,
+.btn-primary:focus,
+.btn-primary:active:focus,
+.btn-secondary:focus,
+.btn-secondary:active:focus,
+.btn-success:focus,
+.btn-success:active:focus,
+.btn-info:focus,
+.btn-info:active:focus,
+.btn-warning:focus,
+.btn-warning:active:focus,
+.btn-danger:focus,
+.btn-danger:active:focus {
+    box-shadow: none !important;
+    outline: none !important;
 }

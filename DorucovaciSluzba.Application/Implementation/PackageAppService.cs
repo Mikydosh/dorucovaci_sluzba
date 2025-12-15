@@ -13,6 +13,7 @@ namespace DorucovaciSluzba.Application.Implementation
             _dbContext = dbContext;
         }
 
+        // Načtení všech zásilek
         public IList<Zasilka> Select()
         {
             return _dbContext.Set<Zasilka>()
@@ -21,6 +22,7 @@ namespace DorucovaciSluzba.Application.Implementation
                     .ToList();
         }
 
+        // Vytvoření nové zásilky
         public void Create(Zasilka zasilka)
         {
             // Vygeneruj unikátní číslo zásilky
@@ -63,7 +65,7 @@ namespace DorucovaciSluzba.Application.Implementation
             return true;
         }
 
-        public Zasilka? FindByCisloAndEmail(string cislo, string email)
+        public Zasilka? FindByCislo(string cislo)
         {
             return _dbContext.Set<Zasilka>()
                  .Include(z => z.Stav)

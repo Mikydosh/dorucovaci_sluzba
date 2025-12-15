@@ -18,6 +18,7 @@ namespace DorucovaciSluzba.Areas.Customer.Controllers
             _userManager = userManager;
         }
 
+        // GET: /Customer/Profile/
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -46,15 +47,18 @@ namespace DorucovaciSluzba.Areas.Customer.Controllers
             return View(viewModel);
         }
 
+        // POST: /Customer/Profile/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(UserProfileViewModel model)
         {
+            // Validace modelu
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+            // Získej aktuálního uživatele
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {

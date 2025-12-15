@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card border-0 shadow-lg rounded-4">
-                <div class="card-header text-white text-center py-4 rounded-top-4" style="background: linear-gradient(135deg, #E8A87C 0%, #e39563 100%);">
+                <div class="card-header text-white text-center py-4 rounded-top-4 bg-warning">
                     <i class="fas fa-search fa-2x mb-2"></i>
                     <h3 class="mb-0 fw-bold">Sledování zásilky</h3>
                     <p class="mb-0 small opacity-75">Zadejte číslo zásilky a email</p>
@@ -23,8 +23,10 @@
                             }
                         </div>
                     }
-
+                    <!-- Formulář-->
                     <form asp-action="Track" method="post">
+
+                        <!-- Číslo zásilky -->
                         <div class="mb-4">
                             <label asp-for="CisloZasilky" class="form-label fw-semibold">
                                 <i class="fa-solid fa-hashtag me-1 text-warning"></i>
@@ -37,6 +39,7 @@
                             <span asp-validation-for="CisloZasilky" class="text-danger small"></span>
                         </div>
 
+                        <!-- E-mail -->
                         <div class="mb-4">
                             <label asp-for="Email" class="form-label fw-semibold">
                                 <i class="fas fa-envelope me-1 text-warning"></i>
@@ -49,6 +52,7 @@
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
+                        <!-- Tlačítka -->
                         <div class="d-grid gap-2 mb-3">
                             <button type="submit" class="btn btn-warning btn-lg text-white fw-semibold">
                                 <i class="fas fa-search me-2"></i>Vyhledat zásilku

@@ -87,6 +87,7 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped mb-0">
+                            <!-- Header tabulky -->
                                 <thead class="table-dark">
                                     <tr>
                                         <th>
@@ -140,6 +141,7 @@
                                         <th class="text-center">Akce</th>
                                     </tr>
                                 </thead>
+                                <!-- Tělo tabulky -->
                                 <tbody>
                                     @foreach (var zasilka in Model)
                                     {
@@ -220,20 +222,27 @@
                                                     <span class="badge bg-info">@zasilka.Stav?.Stav</span>
                                                 }
                                             </td>
+                                            <!-- Akční tlačítka -->
                                             <td class="align-middle text-center">
                                                 <div class="btn-group" role="group">
+                                                    
+                                                    <!-- Detail -->
                                                     <a asp-action="Detail"
                                                        asp-route-id="@zasilka.Id"
                                                        class="btn btn-sm btn-secondary text-dark"
                                                        title="Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    
+                                                    <!-- Upravit -->
                                                     <a asp-action="Edit"
                                                        asp-route-id="@zasilka.Id"
                                                        class="btn btn-sm btn-info"
                                                        title="Upravit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    
+                                                    <!-- Smazat -->
                                                     <a asp-action="Delete"
                                                        asp-route-id="@zasilka.Id"
                                                        class="btn btn-sm btn-danger"

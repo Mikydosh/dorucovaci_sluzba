@@ -58,7 +58,8 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <form asp-action="Select" method="get" class="row g-3 align-items-end mb-1">
-                        <!-- FILTR ROLÍ - NOVÝ -->
+
+                        <!-- FILTR ROLÍ -->
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-user-tag me-1 text-primary"></i>Role
@@ -125,13 +126,14 @@
                 </div>
             }
 
-            <!-- Tabulka uživatelů -->
+            <!-- TABULKA -->
             @if (Model != null && Model.Count > 0)
             {
                 <div class="card shadow-sm">
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped mb-0">
+                                <!-- HLAVIČKA TABULKY -->
                                 <thead class="table-dark">
                                     <tr>
                                         <th>
@@ -185,6 +187,8 @@
                                         <th class="text-center">Akce</th>
                                     </tr>
                                 </thead>
+
+                                <!-- TĚLO TABULKY -->
                                 <tbody>
                                     @foreach (var user in Model)
                                     {
@@ -249,6 +253,8 @@
                                                     <span class="text-muted">Žádná role</span>
                                                 }
                                             </td>
+
+                                            <!-- Akce -->
                                             <td class="align-middle text-center">
                                                 <div class="btn-group" role="group">
                                                     <a asp-action="Edit"

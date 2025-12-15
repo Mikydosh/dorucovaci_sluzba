@@ -23,6 +23,8 @@ namespace DorucovaciSluzba.Areas.Customer.Controllers
             _userManager = userManager;
         }
 
+        // GET: /Customer/MyPackages/
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);

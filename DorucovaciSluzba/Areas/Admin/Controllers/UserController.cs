@@ -24,7 +24,8 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             _dbContext = dbContext;
         }
 
-        // Výpis všech uživatelů
+        // GET -> /Admin/User/Select
+        [HttpGet]
         public async Task<IActionResult> Select(string? sortBy = null, string? sortOrder = null, string? search = null, string? roleFilter = null)
         {
             var users = _userManager.Users.ToList();
@@ -100,7 +101,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
             return View(users);
         }
 
-        // EDIT - GET
+        // GET -> /Admin/User/Edit/{id}
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -134,7 +135,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 Mesto = user.Mesto,
                 Psc = user.Psc,
                 RoleId = roleId,
-                DostupneRole = _roleManager.Roles.ToList()
+                DostupneRole = _roleManager.Roles.ToList() // Načti všechny dostupné role -> [Admin, Podpora, Kuryr, Uzivatel]
             };
 
             return View(viewModel);
@@ -145,6 +146,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
+            // Doplň dostupné role pro případ znovuzobrazení formuláře
             if (!ModelState.IsValid)
             {
                 model.DostupneRole = _roleManager.Roles.ToList();
@@ -220,6 +222,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                                z.PrijemceId == id ||
                                z.KuryrId == id);
 
+            // Pokud má, zobraz chybovou zprávu a nepovol smazání
             if (hasPackages)
             {
                 TempData["UserErrorMessage"] = "Uživatel nemůže být smazán, protože má přiřazené zásilky. Nejprve odstraňte vazby na zásilky nebo je přiřaďte jinému uživateli.";

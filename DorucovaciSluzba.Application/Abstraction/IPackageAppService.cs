@@ -10,7 +10,7 @@ namespace DorucovaciSluzba.Application.Abstraction
         void Create(Zasilka zasilka);
         bool Delete(int zasilkaId);
 
-        Zasilka? FindByCisloAndEmail(string cislo, string email);
+        Zasilka? FindByCislo(string cislo);
         Zasilka? GetById(int id);
         void Update(Zasilka zasilka);
 
