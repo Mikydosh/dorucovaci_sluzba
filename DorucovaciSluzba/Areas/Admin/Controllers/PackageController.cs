@@ -189,7 +189,7 @@ namespace DorucovaciSluzba.Areas.Admin.Controllers
                 // Zaloguj vytvoření zásilky (první stav)
                 _packageHistoryAppService.Create(zasilka.Id, zasilka.StavId);
 
-                return RedirectToAction(nameof(HomeController.Index));
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             catch (Exception)
             {
